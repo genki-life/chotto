@@ -51,10 +51,10 @@ kotlin {
 			dependencies {
 				api(kotlin("stdlib-jdk8"))
 
-				api("com.github.fluidsonic:fluid-json-annotations:0.9.16")
-				api("com.github.fluidsonic:fluid-json-basic:0.9.16") // KT-29082
-				api("com.github.fluidsonic:fluid-json-coding:0.9.16") // KT-29082
-				api("com.github.fluidsonic:fluid-json-coding-jdk8:0.9.16")
+				api("com.github.fluidsonic:fluid-json-annotations:0.9.17")
+				api("com.github.fluidsonic:fluid-json-basic:0.9.17") // KT-29082
+				api("com.github.fluidsonic:fluid-json-coding:0.9.17") // KT-29082
+				api("com.github.fluidsonic:fluid-json-coding-jdk8:0.9.17")
 				api("com.github.fluidsonic:fluid-stdlib:0.9.1") // KT-29082
 				api("com.github.fluidsonic:fluid-stdlib-jdk8:0.9.1")
 			}
@@ -76,5 +76,5 @@ kotlin {
 }
 
 dependencies {
-	"kapt"("com.github.fluidsonic:fluid-json-annotation-processor:0.9.16")
+	"kapt"("com.github.fluidsonic:fluid-json-annotation-processor:0.9.17")
 }
