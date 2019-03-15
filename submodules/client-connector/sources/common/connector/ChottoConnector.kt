@@ -9,8 +9,8 @@ import team.genki.chotto.client.model.*
 
 class ChottoConnector<CommandRequestMeta : CommandRequest.Meta, CommandResponseMeta : CommandResponse.Meta>(
 	baseUrl: Url,
-	private val model: ClientModel<CommandRequestMeta, CommandResponseMeta>,
-	private val httpClient: HttpClient
+	private val httpClient: HttpClient,
+	private val model: ClientModel<CommandRequestMeta, CommandResponseMeta>
 ) {
 
 	private val commandUrl = baseUrl.toBuilder().appendPath("commands").build()
@@ -25,7 +25,7 @@ class ChottoConnector<CommandRequestMeta : CommandRequest.Meta, CommandResponseM
 	}
 
 
-	suspend fun <Result : Any> execute(command: Command<Result>): CommandResponse<Result, *> =
+	suspend fun <Result : Any> execute(command: Command<Result>): CommandResponse<Result, CommandResponseMeta> =
 		execute(request = CommandRequest(
 			command = command,
 			meta = model.createRequestMetaForCommand(command)

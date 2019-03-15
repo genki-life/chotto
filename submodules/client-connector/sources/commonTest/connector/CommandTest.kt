@@ -98,7 +98,6 @@ object CommandTest {
 	private suspend fun test(data: CommandTestData<*>) {
 		val client = ChottoConnector(
 			baseUrl = Url("https://unit.testing.local/"),
-			model = TestClientModel,
 			httpClient = HttpClient(MockEngine {
 				assertEquals(url.toString(), "https://unit.testing.local/commands", "HTTP request URL")
 				assertEquals(method, HttpMethod.Post, "HTTP request method")
@@ -121,7 +120,8 @@ object CommandTest {
 				assertEquals(expectedRequestStructure, actualRequestStructure, "request JSON")
 
 				responseOk(data.serializedResponse)
-			})
+			}),
+			model = TestClientModel
 		)
 		assertEquals(
 			data.response,
