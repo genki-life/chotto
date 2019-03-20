@@ -1,7 +1,7 @@
 package tests
 
-import team.genki.chotto.client.model.*
 import com.github.fluidsonic.fluid.json.*
+import team.genki.chotto.core.*
 
 
 actual val testJsonConfiguration = JsonConfiguration(

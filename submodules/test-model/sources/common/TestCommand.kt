@@ -1,12 +1,12 @@
 package tests
 
-import team.genki.chotto.client.model.*
+import team.genki.chotto.core.*
 import tests.TestCommand.Result
 
 
 data class TestCommand(
 	val property: String
-) : Command<Result>(Companion) {
+) : Command.Typed<TestCommand, Result>(Companion) {
 
 	data class Result(
 		val property: String

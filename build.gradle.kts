@@ -16,18 +16,19 @@ plugins {
 }
 
 val subprojectsForPublishing = setOf(
-	"chotto-client-connector",
-	"chotto-client-model",
-	"chotto-service"
+	"chotto-client",
+	"chotto-core",
+	"chotto-server"
 )
 
 subprojects {
 	group = "team.genki"
-	version = "0.9.2"
+	version = "0.9.3-SNAPSHOT"
 
 	apply<JUnitTestSuitePlugin>()
 
 	repositories {
+		maven("${project.rootDir}/releases") // FIXME temporary
 		bintray("fluidsonic/maven")
 		bintray("genki/maven")
 		bintray("kotlin/kotlin-eap")

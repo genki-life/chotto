@@ -1,6 +1,6 @@
 package tests
 
-import team.genki.chotto.client.model.*
+import team.genki.chotto.core.*
 
 
 data class TestCommandResponseMeta(

@@ -8,9 +8,9 @@ pluginManagement {
 
 rootProject.name = "chotto"
 
-submodule("client-connector")
-submodule("client-model")
-submodule("service")
+submodule("client")
+submodule("core")
+submodule("server")
 submodule("test-model")
 
 enableFeaturePreview("GRADLE_METADATA")

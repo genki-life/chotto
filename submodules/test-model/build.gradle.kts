@@ -12,13 +12,19 @@ kotlin {
 			resources.setSrcDirs(emptyList())
 
 			dependencies {
-				api(submodule("client-model"))
+				//api(submodule("core")) // FIXME
+				api("team.genki:chotto-core:$version")
 			}
 		}
 
 		jvmMain {
 			kotlin.setSrcDirs(listOf("sources/jvm"))
 			resources.setSrcDirs(emptyList())
+
+			dependencies {
+				// FIXME
+				api("team.genki:chotto-core-jvm:$version")
+			}
 		}
 	}
 }

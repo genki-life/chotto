@@ -1,9 +1,9 @@
 package tests
 
-import team.genki.chotto.client.model.*
+import team.genki.chotto.core.*
 
 
 data class TestEntity(
 	override val id: TestId,
 	val property: String
-) : Entity
+) : Entity.Typed<TestId, TestEntity>

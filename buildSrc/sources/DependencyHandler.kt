@@ -1,4 +1,5 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.kotlin.dsl.*
 
 
 @Suppress("unused")
@@ -9,3 +10,8 @@ fun DependencyHandler.fluid(name: String, version: String) =
 @Suppress("unused")
 fun DependencyHandler.ktor(name: String, version: String = "1.1.3") =
 	"io.ktor:ktor-$name:$version"
+
+
+@Suppress("unused")
+fun DependencyHandler.submodule(name: String) =
+	project(":chotto-$name")

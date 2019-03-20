@@ -1,9 +1,9 @@
 package tests
 
-import team.genki.chotto.client.model.*
+import team.genki.chotto.core.*
 
 
-data /*inline*/ class TestId(override val value: String) : EntityId {
+data /*inline*/ class TestId(override val value: String) : EntityId.Typed<TestId, TestEntity> {
 
 	override val type: Companion
 		get() = Companion

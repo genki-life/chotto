@@ -1,9 +1,10 @@
 package tests
 
-import team.genki.chotto.client.model.*
+import team.genki.chotto.core.*
 
 
 object TestClientModel : ClientModel<TestCommandRequestMeta, TestCommandResponseMeta>(
+	name = "test",
 	commandDescriptors = listOf(TestCommand),
 	commandRequestMetaClass = TestCommandRequestMeta::class,
 	commandResponseMetaClass = TestCommandResponseMeta::class,
@@ -16,7 +17,7 @@ object TestClientModel : ClientModel<TestCommandRequestMeta, TestCommandResponse
 	)
 
 
-	override fun createRequestMetaForCommand(command: Command<*>) = TestCommandRequestMeta(
+	override fun createRequestMetaForCommand(command: Command) = TestCommandRequestMeta(
 		property = "value"
 	)
 }
