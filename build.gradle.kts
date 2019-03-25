@@ -8,7 +8,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
 	`junit-test-suite`
-	`maven-publish` // FIXME temporary
+	`maven-publish` // FIXME remove once KT-30413 is fixed
 	publishing
 
 	id("com.github.ben-manes.versions") version "0.21.0"
@@ -28,7 +28,7 @@ subprojects {
 	apply<JUnitTestSuitePlugin>()
 
 	repositories {
-		maven("${project.rootDir}/releases") // FIXME temporary
+		if (needsWorkaroundForKT30413) maven("${project.rootDir}/releases")
 		bintray("fluidsonic/maven")
 		bintray("genki/maven")
 		bintray("kotlin/kotlin-eap")
@@ -57,7 +57,7 @@ subprojects {
 	}
 
 	if (subprojectsForPublishing.contains(name)) {
-		apply<MavenPublishPlugin>()
+		apply<MavenPublishPlugin>() // FIXME remove once KT-30413 is fixed
 
 		val bintrayUser = findProperty("bintrayUser") as String?
 		val bintrayKey = findProperty("bintrayApiKey") as String?
@@ -107,8 +107,8 @@ subprojects {
 			}
 		}
 
+		// FIXME remove once KT-30413 is solved
 		publishing {
-			// FIXME temporary
 			repositories {
 				maven("${project.rootDir}/releases")
 			}
@@ -118,5 +118,5 @@ subprojects {
 
 tasks.withType<Wrapper> {
 	distributionType = Wrapper.DistributionType.ALL
-	gradleVersion = "5.3-rc-3"
+	gradleVersion = "5.3"
 }

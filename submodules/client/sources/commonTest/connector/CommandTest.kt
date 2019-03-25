@@ -7,6 +7,7 @@ import io.ktor.content.TextContent
 import io.ktor.http.HttpMethod
 import io.ktor.http.Url
 import team.genki.chotto.client.*
+import team.genki.chotto.core.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -131,7 +132,7 @@ object CommandTest {
 
 
 	private class CommandTestData<Result : Any>(
-		val command: Command<Result>,
+		val command: Command.Typed<*, Result>,
 		val serializedRequest: String,
 		val serializedResponse: String,
 		val response: CommandResponse<Result, TestCommandResponseMeta>

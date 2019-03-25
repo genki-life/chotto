@@ -1,6 +1,5 @@
 import org.gradle.jvm.tasks.Jar
 
-
 plugins {
 	kotlin("multiplatform")
 }
@@ -23,8 +22,8 @@ kotlin {
 			resources.setSrcDirs(emptyList())
 
 			dependencies {
-				//api(submodule("core"))// FIXME
-				api("team.genki:chotto-core:$version")
+				if (needsWorkaroundForKT30413) api("team.genki:chotto-core:$version")
+				else api(submodule("core"))
 
 				api(kotlin("stdlib-common"))
 				api("io.ktor:ktor-client-core:1.1.3")

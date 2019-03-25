@@ -1,6 +1,5 @@
 import org.gradle.jvm.tasks.Jar
 
-
 plugins {
 	kotlin("multiplatform")
 	kotlin("kapt")
@@ -51,10 +50,7 @@ kotlin {
 			dependencies {
 				api(kotlin("stdlib-jdk8"))
 
-				api("com.github.fluidsonic:fluid-json-basic:0.9.17") // KT-29082
-				api("com.github.fluidsonic:fluid-json-coding:0.9.17") // KT-29082
 				api("com.github.fluidsonic:fluid-json-coding-jdk8:0.9.17")
-				api("com.github.fluidsonic:fluid-stdlib:0.9.1") // KT-29082
 				api("com.github.fluidsonic:fluid-stdlib-jdk8:0.9.1")
 
 				compileOnly("com.github.fluidsonic:fluid-json-annotations:0.9.17")

@@ -12,8 +12,8 @@ kotlin {
 			resources.setSrcDirs(emptyList())
 
 			dependencies {
-				//api(submodule("core")) // FIXME
-				api("team.genki:chotto-core:$version")
+				if (needsWorkaroundForKT30413) api("team.genki:chotto-core:$version")
+				else api(submodule("core"))
 			}
 		}
 
@@ -23,7 +23,7 @@ kotlin {
 
 			dependencies {
 				// FIXME
-				api("team.genki:chotto-core-jvm:$version")
+				//api("team.genki:chotto-core-jvm:$version")
 			}
 		}
 	}

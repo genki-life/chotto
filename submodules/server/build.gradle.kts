@@ -5,8 +5,9 @@ plugins {
 }
 
 dependencies {
-	//api(submodule("core")) // FIXME
-	api("team.genki:chotto-core-jvm:$version")
+	if (needsWorkaroundForKT30413) api("team.genki:chotto-core-jvm:$version")
+	else api(submodule("core"))
+
 	api(fluid("mongo", "0.9.4"))
 	api(fluid("stdlib-jdk8", "0.9.1"))
 	api(kotlin("stdlib-jdk8"))
