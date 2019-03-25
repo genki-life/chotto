@@ -99,7 +99,7 @@ object CommandTest {
 		val client = ChottoClient(
 			baseUrl = Url("https://unit.testing.local/"),
 			httpClient = HttpClient(MockEngine {
-				assertEquals(url.toString(), "https://unit.testing.local/commands", "HTTP request URL")
+				assertEquals(url.toString(), "https://unit.testing.local/test", "HTTP request URL")
 				assertEquals(method, HttpMethod.Post, "HTTP request method")
 
 				val expectedRequestStructure = try {
