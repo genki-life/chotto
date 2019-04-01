@@ -21,4 +21,10 @@ operator fun DayOfWeek.minus(days: Int) =
 
 
 operator fun DayOfWeek.plus(days: Int) =
-	DayOfWeek.values().let { values -> values[(ordinal + days) % values.size] }
+	DayOfWeek.values().let { values ->
+		val index = (ordinal + days) % values.size
+		when {
+			index >= 0 -> values[index]
+			else -> values[index + values.size]
+		}
+	}
