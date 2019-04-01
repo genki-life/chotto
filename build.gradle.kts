@@ -118,5 +118,5 @@ subprojects {
 
 tasks.withType<Wrapper> {
 	distributionType = Wrapper.DistributionType.ALL
-	gradleVersion = "5.3"
+	gradleVersion = "5.3.1"
 }
