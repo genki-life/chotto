@@ -23,7 +23,7 @@ val subprojectsForPublishing = setOf(
 
 subprojects {
 	group = "team.genki"
-	version = "0.9.3"
+	version = "0.9.4"
 
 	apply<JUnitTestSuitePlugin>()
 
