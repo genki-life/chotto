@@ -8,7 +8,7 @@ import kotlin.test.Test
 object CommandRequestTest : JsonTest() {
 
 	@Test
-	fun test() = test(
+	fun test() = testJson(
 		value = CommandRequest(
 			command = TestCommand(
 				property = "value"

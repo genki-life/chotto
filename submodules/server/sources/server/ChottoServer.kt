@@ -1,10 +1,17 @@
 package team.genki.chotto.server
 
+import com.auth0.jwt.JWTVerifier
+import com.auth0.jwt.interfaces.Payload
 import com.github.fluidsonic.fluid.mongo.*
+import com.github.fluidsonic.fluid.stdlib.*
 import io.ktor.application.Application
 import io.ktor.application.ApplicationStarting
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.Principal
+import io.ktor.auth.authenticate
+import io.ktor.auth.authentication
+import io.ktor.auth.jwt.jwt
 import io.ktor.client.utils.CacheControl
 import io.ktor.features.CORS
 import io.ktor.features.CallLogging
@@ -44,6 +51,17 @@ class ChottoServer internal constructor() {
 		val config = ktorEnvironment.config
 
 
+		fun authenticator(jwtRealm: String, jwtVerifier: JWTVerifier, authenticate: suspend Transaction.(jwtPayload: Payload) -> Boolean) =
+			object : Authenticator<Transaction> {
+
+				override val jwtRealm = jwtRealm
+				override val jwtVerifier = jwtVerifier
+
+				override suspend fun Transaction.authenticate(jwtPayload: Payload) =
+					authenticate(jwtPayload)
+			}
+
+
 		internal fun build(): ChottoServer {
 			// create engine before monitoring the start event because Netty's subscriptions must be processed first
 			val engine = embeddedServer(Netty, ktorEnvironment)
@@ -70,7 +88,8 @@ class ChottoServer internal constructor() {
 
 		fun <TCommandRequestMeta : CommandRequest.Meta, TCommandResponseMeta : CommandResponse.Meta> endpoint(
 			model: ClientModel<TCommandRequestMeta, TCommandResponseMeta>,
-			responseMetaFactory: suspend Transaction.(command: Command) -> TCommandResponseMeta
+			responseMetaFactory: suspend Transaction.(command: Command) -> TCommandResponseMeta,
+			authenticator: Authenticator<Transaction>? = null
 		) {
 			when (val existingModel = endpoints[model.name]) {
 				null -> Unit
@@ -79,6 +98,7 @@ class ChottoServer internal constructor() {
 			}
 
 			endpoints[model.name] = Endpoint(
+				authenticator = authenticator,
 				model = model,
 				responseMetaFactory = responseMetaFactory
 			)
@@ -148,29 +168,52 @@ class ChottoServer internal constructor() {
 			if (endpoints.isEmpty())
 				error("at least one endpoint() must be specified")
 
+			// TODO check for model name collisions (or rename endpoints to models)
+
+			authentication {
+				for (endpoint in endpoints.values) {
+					endpoint.authenticator?.let { authenticator ->
+						jwt(name = endpoint.model.name) {
+							realm = authenticator.jwtRealm
+							verifier(authenticator.jwtVerifier)
+
+							validate { credential ->
+								with(authenticator) {
+									val transaction = chottoCall.transaction as Transaction
+									transaction.authenticate(credential.payload)
+										.thenTake { object : Principal {} }
+								}
+							}
+						}
+					}
+				}
+			}
+
 			routing {
 				for (endpoint in endpoints.values) {
-					post(endpoint.model.name) {
-						val request = call.request.pipeline.execute(call, ApplicationReceiveRequest(
-							type = CommandRequest::class,
-							value = CommandRequestPipelineData(
-								model = endpoint.model
-							)
-						)).value as CommandRequest<*, *>
+					authenticate(endpoint.model.name, optional = true) {
+						post(endpoint.model.name) {
+							val request = call.request.pipeline.execute(call, ApplicationReceiveRequest(
+								type = CommandRequest::class,
+								value = CommandRequestPipelineData(
+									model = endpoint.model
+								)
+							)).value as CommandRequest<*, *>
 
-						val chottoCall = chottoCall
+							val chottoCall = chottoCall
 
-						@Suppress("UNCHECKED_CAST")
-						val transaction = this.chottoCall.transaction as Transaction
+							@Suppress("UNCHECKED_CAST")
+							val transaction = this.chottoCall.transaction as Transaction
 
-						val result = chottoCall.commandHandler.handle(request.command)
-						val meta = endpoint.responseMetaFactory(transaction, request.command)
+							val result = chottoCall.commandHandler.handle(request.command)
+							val meta = endpoint.responseMetaFactory(transaction, request.command)
 
-						call.respond(CommandResponsePipelineData(
-							meta = meta,
-							model = endpoint.model,
-							result = result
-						))
+							call.respond(CommandResponsePipelineData(
+								meta = meta,
+								model = endpoint.model,
+								result = result
+							))
+						}
 					}
 				}
 			}
@@ -182,6 +225,7 @@ class ChottoServer internal constructor() {
 
 
 		private inner class Endpoint(
+			val authenticator: Authenticator<Transaction>?,
 			val model: ClientModel<*, *>,
 			val responseMetaFactory: suspend Transaction.(Command) -> CommandResponse.Meta
 		)

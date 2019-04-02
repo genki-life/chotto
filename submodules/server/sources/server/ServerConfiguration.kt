@@ -15,8 +15,8 @@ internal class ServerConfiguration<Context : ChottoServerContext, Transaction : 
 
 		val commandHandlers = transactionConfigurations
 			.flatMap { it.commands.handlers }
-			.also {
-				it.groupBy { it.descriptor }
+			.also { handlers ->
+				handlers.groupBy { it.descriptor }
 					.values
 					.firstOrNull { it.size > 1 }
 					?.let { it.first().descriptor }
@@ -27,8 +27,8 @@ internal class ServerConfiguration<Context : ChottoServerContext, Transaction : 
 
 		val entityResolvers = transactionConfigurations
 			.flatMap { it.entities.resolvers }
-			.also {
-				it.groupBy { it.type }
+			.also { resolvers ->
+				resolvers.groupBy { it.type }
 					.values
 					.firstOrNull { it.size > 1 }
 					?.let { it.first().type }

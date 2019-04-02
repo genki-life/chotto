@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 open class JsonTest {
 
-	internal inline fun <reified Value : Any> test(
+	internal inline fun <reified Value : Any> testJson(
 		value: Value,
 		json: String
 	) {

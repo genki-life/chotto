@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.responseOk
 import io.ktor.content.TextContent
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.Url
 import team.genki.chotto.client.*
@@ -18,6 +19,7 @@ object CommandTest {
 	@Test
 	fun testMinimum() = suspending {
 		test(CommandTestData(
+			accessToken = null,
 			command = TestCommand(
 				property = "value"
 			),
@@ -51,6 +53,7 @@ object CommandTest {
 	@Test
 	fun testMaximum() = suspending {
 		test(CommandTestData(
+			accessToken = AccessToken("secret access token"),
 			command = TestCommand(
 				property = "value"
 			),
@@ -101,6 +104,12 @@ object CommandTest {
 			httpClient = HttpClient(MockEngine {
 				assertEquals(url.toString(), "https://unit.testing.local/test", "HTTP request URL")
 				assertEquals(method, HttpMethod.Post, "HTTP request method")
+				assertEquals("no-cache", headers[HttpHeaders.CacheControl], "no-cache cache control header")
+				assertEquals("no-cache", headers[HttpHeaders.Pragma], "no-cache pragma header")
+
+				data.accessToken?.let { expectedAccessToken ->
+					assertEquals("Bearer ${expectedAccessToken.value}", headers[HttpHeaders.Authorization], "authorization header")
+				}
 
 				val expectedRequestStructure = try {
 					parseJson(data.serializedRequest)
@@ -125,13 +134,17 @@ object CommandTest {
 		)
 		assertEquals(
 			data.response,
-			client.execute(data.command),
+			client.execute(
+				accessToken = data.accessToken,
+				command = data.command
+			),
 			"response value"
 		)
 	}
 
 
 	private class CommandTestData<Result : Any>(
+		val accessToken: AccessToken?,
 		val command: Command.Typed<*, Result>,
 		val serializedRequest: String,
 		val serializedResponse: String,

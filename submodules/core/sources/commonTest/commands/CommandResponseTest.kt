@@ -8,7 +8,7 @@ import kotlin.test.Test
 object CommandResponseTest : JsonTest() {
 
 	@Test
-	fun test() = test(
+	fun test() = testJson(
 		value = CommandResponse(
 			entities = mapOf<EntityId, Entity>(
 				TestId("1") to TestEntity(
