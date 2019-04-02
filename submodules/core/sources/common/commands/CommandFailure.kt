@@ -8,6 +8,10 @@ class CommandFailure(
 	cause: Throwable? = null
 ) : Exception(developerMessage, cause) {
 
+	override val message
+		get() = "[$code] $developerMessage"
+
+
 	companion object {
 
 		const val genericUserMessage = "Looks like we're having some trouble right now.\nPlease try again soon."

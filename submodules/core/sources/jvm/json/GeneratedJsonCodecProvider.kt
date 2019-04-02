@@ -15,7 +15,8 @@ import com.github.fluidsonic.fluid.json.*
 		JSON.ExternalType(FormattedTimestamp::class, JSON(representation = JSON.Representation.singleValue)),
 		JSON.ExternalType(GeoCoordinate::class),
 		JSON.ExternalType(Password::class, JSON(representation = JSON.Representation.singleValue)),
-		JSON.ExternalType(PhoneNumber::class, JSON(representation = JSON.Representation.singleValue))
+		JSON.ExternalType(PhoneNumber::class, JSON(representation = JSON.Representation.singleValue)),
+		JSON.ExternalType(RefreshToken::class, JSON(representation = JSON.Representation.singleValue))
 	]
 )
 internal interface GeneratedJsonCodecProvider : JSONCodecProvider<JSONCodingContext>

@@ -34,18 +34,18 @@ actual class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 	@Suppress("UNCHECKED_CAST")
 	actual fun <TResult : Any> parseCommandResponse(response: String, command: Command.Typed<*, TResult>): CommandResponse<TResult, TCommandResponseMeta> {
 		try {
-			return parser.parseValueOfType(
+			val status = parser.parseValueOfType(
 				source = response,
-				valueType = jsonCodingType(CommandResponse::class, command.descriptor.resultClass, commandResponseMetaClass)
-			) as CommandResponse<TResult, TCommandResponseMeta>
+				valueType = jsonCodingType(CommandRequest.Status::class, command.descriptor.resultClass, commandResponseMetaClass)
+			) as CommandRequest.Status<TResult, TCommandResponseMeta>
+
+			when (status) {
+				is CommandRequest.Status.Failure -> throw status.cause
+				is CommandRequest.Status.Success -> return status.response
+			}
 		}
 		catch (e: JSONException) {
-			try {
-				throw parser.parseValueOfType<CommandFailure>(source = response)
-			}
-			catch (e2: JSONException) {
-				throw CommandFailure.invalidResponse(response, cause = e)
-			}
+			throw CommandFailure.invalidResponse(response, cause = e)
 		}
 	}
 
