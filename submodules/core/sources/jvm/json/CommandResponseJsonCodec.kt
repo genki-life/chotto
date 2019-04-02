@@ -32,14 +32,11 @@ internal class CommandResponseJsonCodec(
 	}
 
 
-	// FIXME status success
 	override fun JSONEncoder<JSONCodingContext>.encode(value: CommandResponse<*, *>) {
 		writeIntoMap {
+			writeMapElement("entities", value = value.entities)
 			writeMapElement("meta", value = value.meta)
 			writeMapElement("result", value = value.result)
-
-			// hack: this is serialized last because the Map can still be modified during serialization of meta & result
-			writeMapElement("entities", value = value.entities)
 		}
 	}
 }

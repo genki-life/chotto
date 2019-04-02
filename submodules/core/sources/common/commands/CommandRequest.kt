@@ -9,4 +9,11 @@ data class CommandRequest<out TCommand : Command.Typed<*, *>, out TMeta : Meta>(
 ) {
 
 	interface Meta
+
+
+	sealed class Status<TResult : Any, TMeta : CommandResponse.Meta> {
+
+		data class Failure<TResult : Any, TMeta : CommandResponse.Meta>(val cause: CommandFailure) : Status<TResult, TMeta>()
+		data class Success<TResult : Any, TMeta : CommandResponse.Meta>(val response: CommandResponse<TResult, TMeta>) : Status<TResult, TMeta>()
+	}
 }

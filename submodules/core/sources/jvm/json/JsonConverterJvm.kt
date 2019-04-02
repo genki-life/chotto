@@ -19,6 +19,7 @@ actual class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 	)
 	val codecProvider = JSONCodecProvider(
 		modelCodecProvider,
+		CommandFailureJsonCodec,
 		CommandRequestJsonCodec(metaClass = commandRequestMetaClass, descriptors = commandDescriptors),
 		CommandResponseJsonCodec(metaClass = commandResponseMetaClass, createDefaultMeta = createDefaultResponseMeta),
 		EntityIdJsonCodec(entityTypeByNamespace = entityTypes.associateBy { it.namespace }),
@@ -31,11 +32,22 @@ actual class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 
 
 	@Suppress("UNCHECKED_CAST")
-	actual fun <TResult : Any> parseCommandResponse(response: String, command: Command.Typed<*, TResult>) =
-		parser.parseValueOfType(
-			source = response,
-			valueType = jsonCodingType(CommandResponse::class, command.descriptor.resultClass, commandResponseMetaClass)
-		) as CommandResponse<TResult, TCommandResponseMeta>
+	actual fun <TResult : Any> parseCommandResponse(response: String, command: Command.Typed<*, TResult>): CommandResponse<TResult, TCommandResponseMeta> {
+		try {
+			return parser.parseValueOfType(
+				source = response,
+				valueType = jsonCodingType(CommandResponse::class, command.descriptor.resultClass, commandResponseMetaClass)
+			) as CommandResponse<TResult, TCommandResponseMeta>
+		}
+		catch (e: JSONException) {
+			try {
+				throw parser.parseValueOfType<CommandFailure>(source = response)
+			}
+			catch (e2: JSONException) {
+				throw CommandFailure.invalidResponse(response, cause = e)
+			}
+		}
+	}
 
 
 	actual fun serializeCommandRequest(request: CommandRequest<*, TCommandRequestMeta>) =

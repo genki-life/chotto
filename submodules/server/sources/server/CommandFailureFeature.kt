@@ -130,14 +130,14 @@ internal object CommandFailureFeature : ApplicationFeature<ApplicationCallPipeli
 			body = {
 				JSONWriter.build(this).use { writer ->
 					writer.writeIntoMap {
-						writeMapElement("error") {
+						writeMapElement("status", string = "failure") // must come first for now
+						writeMapElement("cause") {
 							writeIntoMap {
 								writeMapElement("code", string = failure.code)
 								writeMapElement("developerMessage", string = failure.developerMessage)
 								writeMapElement("userMessage", string = failure.userMessage)
 							}
 						}
-						writeMapElement("status", string = "error")
 					}
 				}
 			},

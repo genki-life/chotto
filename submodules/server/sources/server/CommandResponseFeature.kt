@@ -54,16 +54,20 @@ internal object CommandResponseFeature : ApplicationFeature<ApplicationCallPipel
 			writer = writer
 		).apply {
 			writeMapStart()
+			run {
+				writeMapElement("status", string = "success") // must come first for now
 
-			writeMapElement("meta", value = data.meta)
-			writeMapElement("result", value = data.result)
+				writeMapKey("response")
+				writeMapStart()
+				run {
+					writeMapElement("meta", value = data.meta)
+					writeMapElement("result", value = data.result)
 
-			writeMapKey("entities")
-			writeEntities()
-
-			// FIXME add to JSON codec
-			writeMapElement("status", string = "success")
-
+					writeMapKey("entities")
+					writeEntities()
+				}
+				writeMapEnd()
+			}
 			writeMapEnd()
 		}
 
