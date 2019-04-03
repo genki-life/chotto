@@ -6,16 +6,13 @@ import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.ApplicationFeature
 import io.ktor.application.call
 import io.ktor.auth.UnauthorizedResponse
-import io.ktor.client.utils.CacheControl
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.WriterContent
 import io.ktor.http.withCharset
 import io.ktor.request.httpMethod
 import io.ktor.request.uri
 import io.ktor.response.ApplicationSendPipeline
-import io.ktor.response.header
 import io.ktor.response.respond
 import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelineContext
@@ -122,9 +119,6 @@ internal object CommandFailureFeature : ApplicationFeature<ApplicationCallPipeli
 		if (response.status() == null) {
 			response.status(status)
 		}
-
-		// FIXME default headers
-		response.header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
 
 		respond(WriterContent(
 			body = {

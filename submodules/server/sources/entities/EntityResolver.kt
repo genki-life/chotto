@@ -7,7 +7,7 @@ import team.genki.chotto.core.*
 import java.util.IdentityHashMap
 
 
-// FIXME
+// FIXME rework this
 internal class EntityResolver<in Transaction : ChottoTransaction>(
 	resolvers: Collection<SpecificEntityResolver<*, *, Transaction>>
 ) {
@@ -26,6 +26,6 @@ internal class EntityResolver<in Transaction : ChottoTransaction>(
 					?: GlobalScope.emptyReceiveChannel()
 			}
 			.toChannel()
-			// FIXME convert to client model?
+			// FIXME automatically convert to client model here?
 			.flatMap { it }
 }

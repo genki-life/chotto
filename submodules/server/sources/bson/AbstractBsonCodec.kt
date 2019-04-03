@@ -67,11 +67,9 @@ abstract class AbstractBsonCodec<Value : Any, in Context : BsonCodingContext>(
 
 
 @Suppress("UNCHECKED_CAST")
-private fun <Value : Any> defaultValueClass(codecClass: KClass<out AbstractBsonCodec<Value, *>>): Class<Value> {
-	val typeArgument = (codecClass.java.genericSuperclass as ParameterizedType).actualTypeArguments.first()
-	return when (typeArgument) {
+private fun <Value : Any> defaultValueClass(codecClass: KClass<out AbstractBsonCodec<Value, *>>): Class<Value> =
+	when (val typeArgument = (codecClass.java.genericSuperclass as ParameterizedType).actualTypeArguments.first()) {
 		is Class<*> -> typeArgument as Class<Value>
 		is ParameterizedType -> typeArgument.rawType as Class<Value>
 		else -> error("unsupported type: $typeArgument")
 	}
-}
