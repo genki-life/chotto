@@ -41,10 +41,10 @@ kotlin {
 			dependencies {
 				api(kotlin("stdlib-jdk8"))
 
-				api("com.github.fluidsonic:fluid-json-coding-jdk8:0.9.17")
+				api("com.github.fluidsonic:fluid-json-coding-jdk8:0.9.18")
 				api("com.github.fluidsonic:fluid-stdlib-jdk8:0.9.1")
 
-				compileOnly("com.github.fluidsonic:fluid-json-annotations:0.9.17")
+				compileOnly("com.github.fluidsonic:fluid-json-annotations:0.9.18")
 			}
 		}
 
@@ -68,5 +68,5 @@ tasks.getByName<Jar>("jvmSourcesJar") {
 }
 
 dependencies {
-	"kapt"("com.github.fluidsonic:fluid-json-annotation-processor:0.9.17")
+	"kapt"("com.github.fluidsonic:fluid-json-annotation-processor:0.9.18")
 }
