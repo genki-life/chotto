@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 
 @Suppress("unused")
-object DayOfWeekTest {
+object DayOfWeekTest : JsonTest() {
 
 	@Test
 	fun testDisplayName() {
@@ -18,6 +18,24 @@ object DayOfWeekTest {
 		assertEquals("Saturday", DayOfWeek.saturday.displayName(Locale.englishInUnitedStates))
 		assertEquals("Sunday", DayOfWeek.sunday.displayName(Locale.englishInUnitedStates))
 	}
+
+
+	@Test
+	fun testJson() =
+		mapOf(
+			DayOfWeek.monday to "monday",
+			DayOfWeek.tuesday to "tuesday",
+			DayOfWeek.wednesday to "wednesday",
+			DayOfWeek.thursday to "thursday",
+			DayOfWeek.friday to "friday",
+			DayOfWeek.saturday to "saturday",
+			DayOfWeek.sunday to "sunday"
+		).forEach { (value, string) ->
+			testJson(
+				value = value,
+				json = """ "$string" """
+			)
+		}
 
 
 	@Test

@@ -12,6 +12,17 @@ expect class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 	createDefaultResponseMeta: () -> TCommandResponseMeta?
 ) {
 
-	fun <TResult : Any> parseCommandResponse(response: String, command: Command.Typed<*, TResult>): CommandResponse<TResult, TCommandResponseMeta>
+	fun <TResult : Any> parseCommandStatus(response: String, command: Command.Typed<*, TResult>): CommandRequest.Status<TResult, TCommandResponseMeta>
 	fun serializeCommandRequest(request: CommandRequest<*, TCommandRequestMeta>): String
 }
+
+
+@Suppress("UNCHECKED_CAST")
+actual fun <TResult : Any, TCommandResponseMeta : CommandResponse.Meta> JsonConverter<*, TCommandResponseMeta>.parseCommandResponse(
+	response: String,
+	command: Command.Typed<*, TResult>
+) =
+	when (val status = parseCommandStatus(response, command)) {
+		is CommandRequest.Status.Failure -> throw status.cause
+		is CommandRequest.Status.Success -> status.response
+	}

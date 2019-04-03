@@ -1,29 +1,17 @@
-import org.gradle.jvm.tasks.Jar
-
 plugins {
 	kotlin("multiplatform")
 }
 
 kotlin {
 	sourceSets {
-		targetFromPreset(presets.getByName("jvmWithJava"), "jvm") {
-			val javadocJar by tasks.creating(Jar::class) {
-				archiveClassifier.set("javadoc")
-				from(tasks["javadoc"])
-			}
-
-			mavenPublication {
-				artifact(javadocJar)
-			}
-		}
+		jvm()
 
 		commonMain {
 			kotlin.setSrcDirs(listOf("sources/common"))
 			resources.setSrcDirs(emptyList())
 
 			dependencies {
-				if (needsWorkaroundForKT30413) api("team.genki:chotto-core:$version")
-				else api(submodule("core"))
+				api(submodule("core"))
 
 				api(kotlin("stdlib-common"))
 				api("io.ktor:ktor-client-core:1.1.3")

@@ -19,12 +19,13 @@ internal object CommandFailureJsonCodec : AbstractJSONCodec<CommandFailure, JSON
 			}
 		}
 
-		val _userMessage = userMessage ?: missingPropertyError("userMessage")
+		// https://youtrack.jetbrains.com/issue/KT-29510 (thus fluid-json cannot use contracts to support smart-casts here)
+		val nonNullUserMessage = userMessage ?: missingPropertyError("userMessage")
 
 		return CommandFailure(
 			code = code ?: missingPropertyError("code"),
-			developerMessage = developerMessage ?: _userMessage,
-			userMessage = _userMessage
+			developerMessage = developerMessage ?: nonNullUserMessage,
+			userMessage = nonNullUserMessage
 		)
 	}
 

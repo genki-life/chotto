@@ -40,7 +40,7 @@ internal object CommandRequestFeature : ApplicationFeature<ApplicationCallPipeli
 	}
 
 
-	private fun parseRequest(body: String, jsonParser: JSONCodingParser) =
+	private fun parseRequest(body: String, jsonParser: JSONCodingParser<*>) =
 		try {
 			jsonParser.parseValueOfType<CommandRequest<*, *>>(body)
 		}

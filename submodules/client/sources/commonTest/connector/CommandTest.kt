@@ -33,8 +33,11 @@ object CommandTest {
 				}
 			}""",
 			serializedResponse = """{
-				"result": {
-					"property": "value"
+				"status": "success",
+				"response": {
+					"result": {
+						"property": "value"
+					}
 				}
 			}""",
 			response = CommandResponse(
@@ -67,17 +70,20 @@ object CommandTest {
 				}
 			}""",
 			serializedResponse = """{
-				"entities": {
-					"tests/1": {
-						"id":       "tests/1",
+				"status": "success",
+				"response": {
+					"entities": {
+						"tests/1": {
+							"id":       "tests/1",
+							"property": "value"
+						}
+					},
+					"meta": {
+						"property": "value"
+					},
+					"result": {
 						"property": "value"
 					}
-				},
-				"meta": {
-					"property": "value"
-				},
-				"result": {
-					"property": "value"
 				}
 			}""",
 			response = CommandResponse(

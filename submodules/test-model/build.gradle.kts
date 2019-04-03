@@ -4,7 +4,9 @@ plugins {
 }
 
 kotlin {
-	targetFromPreset(presets.getByName("jvmWithJava"), "jvm")
+	if (workaroundForKT30667) jvm()
+	else targetFromPreset(presets.getByName("jvmWithJava"), "jvm")
+
 
 	sourceSets {
 		commonMain {
@@ -12,19 +14,16 @@ kotlin {
 			resources.setSrcDirs(emptyList())
 
 			dependencies {
-				if (needsWorkaroundForKT30413) api("team.genki:chotto-core:$version")
-				else api(submodule("core"))
+				api(submodule("core"))
 			}
 		}
 
 		jvmMain {
-			kotlin.setSrcDirs(listOf("sources/jvm"))
+			kotlin.setSrcDirs(
+				if (workaroundForKT30667) listOf("sources/jvm", "build/generated/source/kaptKotlin/main")
+				else listOf("sources/jvm")
+			)
 			resources.setSrcDirs(emptyList())
-
-			dependencies {
-				// FIXME
-				//api("team.genki:chotto-core-jvm:$version")
-			}
 		}
 	}
 }

@@ -6,20 +6,8 @@ plugins {
 }
 
 kotlin {
-	targetFromPreset(presets.getByName("jvmWithJava"), "jvm") {
-		val javadocJar by tasks.creating(Jar::class) {
-			archiveClassifier.set("javadoc")
-			from(tasks["javadoc"])
-		}
-
-		tasks.getByName<Jar>("jvmSourcesJar") {
-			from(file("build/generated/source/kaptKotlin/main"))
-		}
-
-		mavenPublication {
-			artifact(javadocJar)
-		}
-	}
+	if (workaroundForKT30667) jvm()
+	else targetFromPreset(presets.getByName("jvmWithJava"), "jvm")
 
 	sourceSets {
 		commonMain {
@@ -44,7 +32,10 @@ kotlin {
 		}
 
 		jvmMain {
-			kotlin.setSrcDirs(listOf("sources/jvm"))
+			kotlin.setSrcDirs(
+				if (workaroundForKT30667) listOf("sources/jvm", "build/generated/source/kaptKotlin/main")
+				else listOf("sources/jvm")
+			)
 			resources.setSrcDirs(emptyList())
 
 			dependencies {
@@ -70,6 +61,10 @@ kotlin {
 			}
 		}
 	}
+}
+
+tasks.getByName<Jar>("jvmSourcesJar") {
+	from(file("build/generated/source/kaptKotlin/main"))
 }
 
 dependencies {

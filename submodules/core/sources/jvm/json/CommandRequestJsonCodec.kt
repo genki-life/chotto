@@ -18,7 +18,7 @@ internal class CommandRequestJsonCodec(
 	override fun JSONDecoder<JSONCodingContext>.decode(valueType: JSONCodingType<CommandRequest<*, *>>): CommandRequest<*, *> {
 		var descriptor: Command.Typed.Descriptor<*, *>? = null
 		var command: Command.Typed<*, *>? = null
-		var commandSkipped = false // TODO make order of properties irrelevant
+		var commandSkipped = false // make order of properties irrelevant at some point
 		var meta: Meta? = null
 
 		readMapByElementValue { key ->
@@ -47,15 +47,15 @@ internal class CommandRequestJsonCodec(
 			command = command
 				?: if (commandSkipped) invalidPropertyError("name", "property must occur before property 'command'")
 				else missingPropertyError("command"),
-			meta = meta!! // FIXME optional?
+			meta = meta ?: missingPropertyError("meta")
 		)
 	}
 
 
 	override fun JSONEncoder<JSONCodingContext>.encode(value: CommandRequest<*, *>) {
 		writeIntoMap {
-			writeMapElement("name", value.command.descriptor.name) // TODO name must come first for now - lift this limitation if possible
-			writeMapElement("meta", value.meta) // FIXME optional?
+			writeMapElement("name", value.command.descriptor.name) // name must come first for now - lift this limitation at some point
+			writeMapElement("meta", value.meta)
 			writeMapElement("command", value.command)
 		}
 	}

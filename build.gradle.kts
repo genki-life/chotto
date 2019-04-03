@@ -8,7 +8,6 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
 	`junit-test-suite`
-	`maven-publish` // FIXME remove once KT-30413 is fixed
 	publishing
 
 	id("com.github.ben-manes.versions") version "0.21.0"
@@ -28,7 +27,6 @@ subprojects {
 	apply<JUnitTestSuitePlugin>()
 
 	repositories {
-		if (needsWorkaroundForKT30413) maven("${project.rootDir}/releases")
 		bintray("fluidsonic/maven")
 		bintray("genki/maven")
 		bintray("kotlin/kotlin-eap")
@@ -104,13 +102,6 @@ subprojects {
 							}
 						}
 				}
-			}
-		}
-
-		// FIXME remove once KT-30413 is solved
-		publishing {
-			repositories {
-				maven("${project.rootDir}/releases")
 			}
 		}
 	}

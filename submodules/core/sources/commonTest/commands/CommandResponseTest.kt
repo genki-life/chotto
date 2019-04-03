@@ -4,7 +4,6 @@ import team.genki.chotto.core.*
 import kotlin.test.Test
 
 
-@Suppress("unused")
 object CommandResponseTest : JsonTest() {
 
 	@Test

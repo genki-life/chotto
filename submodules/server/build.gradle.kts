@@ -5,8 +5,7 @@ plugins {
 }
 
 dependencies {
-	if (needsWorkaroundForKT30413) api("team.genki:chotto-core-jvm:$version")
-	else api(submodule("core"))
+	api(submodule("core"))
 
 	api(fluid("mongo", "0.9.5"))
 	api(fluid("stdlib-jdk8", "0.9.1"))

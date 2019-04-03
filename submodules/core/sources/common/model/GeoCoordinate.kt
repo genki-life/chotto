@@ -1,8 +1,7 @@
 package team.genki.chotto.core
 
 
-// FIXME update fluid-stdlib
-
+// TODO make fluid-stdlib multiplatform
 expect class GeoCoordinate(
 	latitude: Double,
 	longitude: Double
