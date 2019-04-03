@@ -1,6 +1,6 @@
 package tests
 
-import io.ktor.client.HttpClient
+import io.ktor.client.engine.config
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.responseOk
 import io.ktor.content.TextContent
@@ -107,35 +107,37 @@ object CommandTest {
 	private suspend fun test(data: CommandTestData<*>) {
 		val client = ChottoClient(
 			baseUrl = Url("https://unit.testing.local/"),
-			httpClient = HttpClient(MockEngine {
-				assertEquals(url.toString(), "https://unit.testing.local/test", "HTTP request URL")
-				assertEquals(method, HttpMethod.Post, "HTTP request method")
-				assertEquals("no-cache", headers[HttpHeaders.CacheControl], "no-cache cache control header")
-				assertEquals("no-cache", headers[HttpHeaders.Pragma], "no-cache pragma header")
+			httpEngine = MockEngine.config {
+				check = {
+					assertEquals(url.toString(), "https://unit.testing.local/test", "HTTP request URL")
+					assertEquals(method, HttpMethod.Post, "HTTP request method")
+					assertEquals("no-cache", headers[HttpHeaders.CacheControl], "no-cache cache control header")
+					assertEquals("no-cache", headers[HttpHeaders.Pragma], "no-cache pragma header")
 
-				data.accessToken?.let { expectedAccessToken ->
-					assertEquals("Bearer ${expectedAccessToken.value}", headers[HttpHeaders.Authorization], "authorization header")
-				}
+					data.accessToken?.let { expectedAccessToken ->
+						assertEquals("Bearer ${expectedAccessToken.value}", headers[HttpHeaders.Authorization], "authorization header")
+					}
 
-				val expectedRequestStructure = try {
-					parseJson(data.serializedRequest)
-				}
-				catch (e: Exception) {
-					throw AssertionError("Cannot parse expected request JSON:\n${data.serializedRequest}\n\n$e")
-				}
+					val expectedRequestStructure = try {
+						parseJson(data.serializedRequest)
+					}
+					catch (e: Exception) {
+						throw AssertionError("Cannot parse expected request JSON:\n${data.serializedRequest}\n\n$e")
+					}
 
-				val actualRequestJson = (content as? TextContent)?.text ?: throw AssertionError("only TextContent supported for now")
-				val actualRequestStructure = try {
-					parseJson(actualRequestJson)
-				}
-				catch (e: Exception) {
-					throw AssertionError("Cannot parse actual request JSON:\n$actualRequestJson\n\n$e")
-				}
+					val actualRequestJson = (content as? TextContent)?.text ?: throw AssertionError("only TextContent supported for now")
+					val actualRequestStructure = try {
+						parseJson(actualRequestJson)
+					}
+					catch (e: Exception) {
+						throw AssertionError("Cannot parse actual request JSON:\n$actualRequestJson\n\n$e")
+					}
 
-				assertEquals(expectedRequestStructure, actualRequestStructure, "request JSON")
+					assertEquals(expectedRequestStructure, actualRequestStructure, "request JSON")
 
-				responseOk(data.serializedResponse)
-			}),
+					responseOk(data.serializedResponse)
+				}
+			},
 			model = TestClientModel
 		)
 		assertEquals(

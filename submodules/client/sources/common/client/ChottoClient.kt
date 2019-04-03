@@ -1,6 +1,7 @@
 package team.genki.chotto.client
 
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.utils.CacheControl
@@ -13,11 +14,14 @@ import team.genki.chotto.core.*
 
 class ChottoClient<TModel : ClientModel<*, *>>(
 	baseUrl: Url,
-	private val httpClient: HttpClient,
+	httpEngine: HttpClientEngineFactory<*>,
 	private val model: TModel
 ) {
 
 	private val endpointUrl = baseUrl.toBuilder().appendPath(model.name).build()
+	private val httpClient = HttpClient(httpEngine) {
+		expectSuccess = false
+	}
 
 
 	@Suppress("UNCHECKED_CAST")

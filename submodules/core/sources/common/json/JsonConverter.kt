@@ -18,7 +18,7 @@ expect class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 
 
 @Suppress("UNCHECKED_CAST")
-actual fun <TResult : Any, TCommandResponseMeta : CommandResponse.Meta> JsonConverter<*, TCommandResponseMeta>.parseCommandResponse(
+fun <TResult : Any, TCommandResponseMeta : CommandResponse.Meta> JsonConverter<*, TCommandResponseMeta>.parseCommandResponse(
 	response: String,
 	command: Command.Typed<*, TResult>
 ) =
