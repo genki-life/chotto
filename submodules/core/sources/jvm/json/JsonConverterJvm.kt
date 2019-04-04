@@ -29,7 +29,8 @@ actual class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 		EntityIdJsonCodec(entityTypeByNamespace = entityTypes.associateBy { it.namespace }),
 		JSONCodecProvider(entityTypes.map { SpecificEntityIdJsonCodec(it as EntityType<Nothing, *>) }),
 		EntityMapJsonCodec,
-		EnumJSONCodecProvider(transformation = EnumJSONTransformation.ToString(EnumJSONTransformation.Case.lowercase_words))
+		EnumJSONCodecProvider(transformation = EnumJSONTransformation.ToString(EnumJSONTransformation.Case.lowercase_words)),
+		UnitJsonCodec
 	)
 
 	val parser = JSONCodingParser.builder().decodingWith(codecProvider).build()
