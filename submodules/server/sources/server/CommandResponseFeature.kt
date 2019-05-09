@@ -1,15 +1,12 @@
 package team.genki.chotto.server
 
 import com.github.fluidsonic.fluid.json.*
-import io.ktor.application.ApplicationCallPipeline
-import io.ktor.application.ApplicationFeature
-import io.ktor.http.ContentType
-import io.ktor.http.content.OutgoingContent
-import io.ktor.http.content.TextContent
-import io.ktor.http.withCharset
-import io.ktor.response.ApplicationSendPipeline
-import io.ktor.util.AttributeKey
-import java.io.StringWriter
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.http.content.*
+import io.ktor.response.*
+import io.ktor.util.*
+import java.io.*
 
 
 internal object CommandResponseFeature : ApplicationFeature<ApplicationCallPipeline, Unit, Unit> {

@@ -1,13 +1,12 @@
 package team.genki.chotto.server
 
 import team.genki.chotto.core.*
-import java.security.NoSuchAlgorithmException
-import java.security.SecureRandom
-import java.security.spec.InvalidKeySpecException
-import java.util.Base64
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.PBEKeySpec
-import kotlin.experimental.xor
+import java.security.*
+import java.security.spec.*
+import java.util.*
+import javax.crypto.*
+import javax.crypto.spec.*
+import kotlin.experimental.*
 
 
 // initially from https://crackstation.net/hashing-security.htm

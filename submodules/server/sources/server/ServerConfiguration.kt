@@ -1,6 +1,6 @@
 package team.genki.chotto.server
 
-import io.ktor.application.ApplicationCall
+import io.ktor.application.*
 
 
 internal class ServerConfiguration<Context : ChottoServerContext, Transaction : ChottoTransaction>(

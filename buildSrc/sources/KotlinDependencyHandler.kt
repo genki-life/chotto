@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
+import org.jetbrains.kotlin.gradle.plugin.*
 
 
 @Suppress("unused")

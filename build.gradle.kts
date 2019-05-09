@@ -1,9 +1,7 @@
-import com.jfrog.bintray.gradle.BintrayExtension
-import com.jfrog.bintray.gradle.BintrayPlugin
-import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
-import org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
+import com.jfrog.bintray.gradle.*
+import com.jfrog.bintray.gradle.tasks.*
+import org.gradle.api.publish.maven.internal.artifact.*
+import org.gradle.api.tasks.testing.logging.*
 
 plugins {
 	`junit-test-suite`

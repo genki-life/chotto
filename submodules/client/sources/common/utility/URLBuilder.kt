@@ -1,9 +1,6 @@
 package team.genki.chotto.client
 
-import io.ktor.http.URLBuilder
-import io.ktor.http.Url
-import io.ktor.http.encodeURLQueryComponent
-import io.ktor.http.takeFrom
+import io.ktor.http.*
 
 
 fun Url.toBuilder() =

@@ -1,16 +1,12 @@
 package tests
 
-import io.ktor.client.engine.config
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.responseOk
-import io.ktor.content.TextContent
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.Url
+import io.ktor.client.engine.*
+import io.ktor.client.engine.mock.*
+import io.ktor.content.*
+import io.ktor.http.*
 import team.genki.chotto.client.*
 import team.genki.chotto.core.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.*
 
 
 @Suppress("unused")

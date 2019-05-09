@@ -1,6 +1,6 @@
-import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.*
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.*
 
 
 val SourceSet.kotlin

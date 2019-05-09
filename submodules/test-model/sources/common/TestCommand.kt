@@ -1,7 +1,7 @@
 package tests
 
 import team.genki.chotto.core.*
-import tests.TestCommand.Result
+import tests.TestCommand.*
 
 
 data class TestCommand(

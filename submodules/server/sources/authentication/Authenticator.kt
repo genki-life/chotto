@@ -1,7 +1,7 @@
 package team.genki.chotto.server
 
-import com.auth0.jwt.JWTVerifier
-import com.auth0.jwt.interfaces.Payload
+import com.auth0.jwt.*
+import com.auth0.jwt.interfaces.*
 
 
 interface Authenticator<in Transaction : ChottoTransaction> {

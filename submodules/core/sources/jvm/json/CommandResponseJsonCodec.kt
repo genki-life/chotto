@@ -2,7 +2,7 @@ package team.genki.chotto.core
 
 import com.github.fluidsonic.fluid.json.*
 import team.genki.chotto.core.CommandResponse.*
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 
 internal class CommandResponseJsonCodec(

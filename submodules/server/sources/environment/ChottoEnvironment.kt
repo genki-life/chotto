@@ -1,6 +1,6 @@
 package team.genki.chotto.server
 
-import io.ktor.application.ApplicationCall
+import io.ktor.application.*
 
 
 interface ChottoEnvironment<Context : ChottoServerContext, Transaction : ChottoTransaction> {

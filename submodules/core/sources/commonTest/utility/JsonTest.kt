@@ -1,7 +1,6 @@
 package tests
 
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 
 open class JsonTest {

@@ -1,7 +1,7 @@
 package team.genki.chotto.server
 
 import team.genki.chotto.core.*
-import java.util.IdentityHashMap
+import java.util.*
 
 
 internal class CommandHandler(

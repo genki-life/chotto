@@ -1,6 +1,6 @@
 package team.genki.chotto.server
 
-import org.bson.BsonWriter
+import org.bson.*
 
 
 fun BsonWriter.write(name: String, boolean: Boolean) {

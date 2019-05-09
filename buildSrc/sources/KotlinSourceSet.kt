@@ -1,5 +1,5 @@
-import org.gradle.api.NamedDomainObjectContainer
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.gradle.api.*
+import org.jetbrains.kotlin.gradle.plugin.*
 
 
 inline operator fun KotlinSourceSet.invoke(configure: KotlinSourceSet.() -> Unit) =

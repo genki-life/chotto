@@ -1,6 +1,6 @@
 package team.genki.chotto.core
 
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 
 expect class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandResponseMeta : CommandResponse.Meta> internal constructor(

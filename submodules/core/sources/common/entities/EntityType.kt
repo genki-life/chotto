@@ -1,6 +1,6 @@
 package team.genki.chotto.core
 
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 
 interface EntityType<TId : EntityId.Typed<TId, TEntity>, TEntity : Entity.Typed<TId, TEntity>> {

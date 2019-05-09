@@ -1,8 +1,7 @@
 package tests
 
 import team.genki.chotto.core.*
-import kotlin.test.Test
-import kotlin.test.assertFalse
+import kotlin.test.*
 
 
 @Suppress("unused")
