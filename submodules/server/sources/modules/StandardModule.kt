@@ -12,7 +12,7 @@ internal object StandardModule : ChottoModule<ChottoServerContext, ChottoTransac
 			GeoCoordinateBsonCodec,
 			PasswordHashBsonCodec,
 			PhoneNumberBsonCodec,
-			TimezoneBsonCodec
+			TimeZoneBsonCodec
 		)
 	}
 }

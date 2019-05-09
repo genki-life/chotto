@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.*
 
 plugins {
 	kotlin("jvm")
@@ -8,7 +8,6 @@ dependencies {
 	api(submodule("core"))
 
 	api(fluid("mongo", "0.9.5"))
-	api(fluid("stdlib-jdk8", "0.9.1"))
 	api(kotlin("stdlib-jdk8"))
 	api(ktor("auth-jwt"))
 	api(ktor("server-netty"))

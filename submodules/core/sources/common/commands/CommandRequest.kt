@@ -8,6 +8,9 @@ data class CommandRequest<out TCommand : Command.Typed<*, *>, out TMeta : Meta>(
 	val meta: TMeta
 ) {
 
+	companion object
+
+
 	interface Meta
 
 

@@ -1,5 +1,7 @@
 package team.genki.chotto.core
 
+import com.github.fluidsonic.fluid.stdlib.*
+
 
 class Country private constructor(
 	val code: String

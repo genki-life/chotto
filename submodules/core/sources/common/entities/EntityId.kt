@@ -7,6 +7,9 @@ interface EntityId {
 	val value: String
 
 
+	companion object
+
+
 	interface Typed<TId : Typed<TId, TEntity>, TEntity : Entity.Typed<TId, TEntity>> : EntityId {
 
 		override val type: EntityType<TId, TEntity>

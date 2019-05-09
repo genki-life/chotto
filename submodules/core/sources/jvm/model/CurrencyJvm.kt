@@ -1,5 +1,6 @@
 package team.genki.chotto.core
 
+import com.github.fluidsonic.fluid.stdlib.*
 import java.util.Currency as JavaCurrency
 
 
@@ -7,4 +8,4 @@ actual val allCurrencyCodes: Set<String> = JavaCurrency.getAvailableCurrencies()
 
 
 actual fun Currency.name(locale: Locale): String =
-	JavaCurrency.getInstance(code).getDisplayName(locale.java)
+	JavaCurrency.getInstance(code).getDisplayName(locale.platform)

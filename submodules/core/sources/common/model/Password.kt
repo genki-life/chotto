@@ -5,4 +5,7 @@ data /*inline*/ class Password(val value: String) {
 
 	override fun toString() =
 		"Password(***)"
+
+
+	companion object
 }

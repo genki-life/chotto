@@ -9,5 +9,8 @@ data class CommandResponse<out TResult : Any, out TMeta : Meta>(
 	val result: TResult
 ) {
 
+	companion object
+
+
 	interface Meta
 }

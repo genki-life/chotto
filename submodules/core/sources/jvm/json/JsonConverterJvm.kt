@@ -1,7 +1,7 @@
 package team.genki.chotto.core
 
 import com.github.fluidsonic.fluid.json.*
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 
 actual class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandResponseMeta : CommandResponse.Meta> actual constructor(
@@ -26,11 +26,13 @@ actual class JsonConverter<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 		CommandFailureJsonCodec,
 		CommandRequestJsonCodec(metaClass = commandRequestMetaClass, descriptors = commandDescriptors),
 		CommandResponseJsonCodec(metaClass = commandResponseMetaClass, createDefaultMeta = createDefaultResponseMeta),
+		TimestampJsonCodec,
+		TimeZoneJsonCodec,
+		UnitJsonCodec,
 		EntityIdJsonCodec(entityTypeByNamespace = entityTypes.associateBy { it.namespace }),
 		JSONCodecProvider(entityTypes.map { SpecificEntityIdJsonCodec(it as EntityType<Nothing, *>) }),
 		EntityMapJsonCodec,
-		EnumJSONCodecProvider(transformation = EnumJSONTransformation.ToString(EnumJSONTransformation.Case.lowercase_words)),
-		UnitJsonCodec
+		EnumJSONCodecProvider(transformation = EnumJSONTransformation.ToString(EnumJSONTransformation.Case.lowercase_words))
 	)
 
 	val parser = JSONCodingParser.builder().decodingWith(codecProvider).build()

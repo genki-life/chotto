@@ -16,6 +16,7 @@ kotlin {
 
 			dependencies {
 				api(kotlin("stdlib-common"))
+				api(fluid("stdlib", "0.9.6"))
 			}
 		}
 
@@ -25,7 +26,6 @@ kotlin {
 
 			dependencies {
 				implementation(submodule("test-model"))
-
 				implementation(kotlin("test-common"))
 				implementation(kotlin("test-annotations-common"))
 			}
@@ -40,11 +40,9 @@ kotlin {
 
 			dependencies {
 				api(kotlin("stdlib-jdk8"))
+				api(fluid("json-coding-jdk8", "0.9.20"))
 
-				api("com.github.fluidsonic:fluid-json-coding-jdk8:0.9.18")
-				api("com.github.fluidsonic:fluid-stdlib-jdk8:0.9.1")
-
-				compileOnly("com.github.fluidsonic:fluid-json-annotations:0.9.18")
+				compileOnly(fluid("json-annotations", "0.9.20"))
 			}
 		}
 
@@ -68,5 +66,5 @@ tasks.getByName<Jar>("jvmSourcesJar") {
 }
 
 dependencies {
-	"kapt"("com.github.fluidsonic:fluid-json-annotation-processor:0.9.18")
+	"kapt"(fluid("json-annotation-processor", "0.9.20"))
 }

@@ -5,7 +5,6 @@ import org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
-
 plugins {
 	`junit-test-suite`
 	publishing
@@ -109,5 +108,5 @@ subprojects {
 
 tasks.withType<Wrapper> {
 	distributionType = Wrapper.DistributionType.ALL
-	gradleVersion = "5.3.1"
+	gradleVersion = "5.4.1"
 }

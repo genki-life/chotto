@@ -1,8 +1,7 @@
 package tests
 
-import team.genki.chotto.core.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import com.github.fluidsonic.fluid.stdlib.*
+import kotlin.test.*
 
 
 @Suppress("unused")

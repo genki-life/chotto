@@ -1,8 +1,7 @@
 package team.genki.chotto.server
 
-import org.bson.BsonReader
-import org.bson.BsonWriter
-import team.genki.chotto.core.*
+import com.github.fluidsonic.fluid.stdlib.*
+import org.bson.*
 
 
 internal object GeoCoordinateBsonCodec : AbstractBsonCodec<GeoCoordinate, BsonCodingContext>() {

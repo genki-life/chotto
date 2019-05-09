@@ -1,6 +1,7 @@
 package team.genki.chotto.core
 
 import com.github.fluidsonic.fluid.json.*
+import com.github.fluidsonic.fluid.stdlib.*
 
 
 // note https://youtrack.jetbrains.com/issue/KT-27598

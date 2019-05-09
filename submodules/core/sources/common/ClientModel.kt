@@ -1,6 +1,6 @@
 package team.genki.chotto.core
 
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 
 abstract class ClientModel<TCommandRequestMeta : CommandRequest.Meta, TCommandResponseMeta : CommandResponse.Meta>(
@@ -48,4 +48,7 @@ abstract class ClientModel<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 
 	protected open fun createDefaultResponseMeta(): TCommandResponseMeta? = null
 	abstract fun createRequestMetaForCommand(command: Command): TCommandRequestMeta
+
+
+	companion object
 }

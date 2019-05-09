@@ -8,4 +8,7 @@ data /*inline*/ class EmailAddress(val value: String) {
 
 
 	override fun toString() = value
+
+
+	companion object
 }

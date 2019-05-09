@@ -1,12 +1,15 @@
 package team.genki.chotto.core
 
 import team.genki.chotto.core.Command.*
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 
 interface Command {
 
 	val descriptor: Descriptor
+
+
+	companion object
 
 
 	interface Descriptor {
