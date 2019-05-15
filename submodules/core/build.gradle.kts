@@ -16,7 +16,7 @@ kotlin {
 
 			dependencies {
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.6"))
+				api(fluid("stdlib", "0.9.7"))
 			}
 		}
 
@@ -40,9 +40,9 @@ kotlin {
 
 			dependencies {
 				api(kotlin("stdlib-jdk8"))
-				api(fluid("json-coding-jdk8", "0.9.20"))
+				api(fluid("json-coding-jdk8", "0.9.21"))
 
-				compileOnly(fluid("json-annotations", "0.9.20"))
+				compileOnly(fluid("json-annotations", "0.9.21"))
 			}
 		}
 
@@ -66,5 +66,5 @@ tasks.getByName<Jar>("jvmSourcesJar") {
 }
 
 dependencies {
-	"kapt"(fluid("json-annotation-processor", "0.9.20"))
+	"kapt"(fluid("json-annotation-processor", "0.9.21"))
 }

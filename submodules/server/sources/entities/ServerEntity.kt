@@ -12,7 +12,7 @@ interface ServerEntity {
 		TId : EntityId.Typed<TId, TEntity>,
 		TEntity : Entity.Typed<TId, TEntity>,
 		in TTransaction : ChottoTransaction
-		> : ServerEntity, CoreModelConvertible<TEntity, TTransaction> {
+		> : ServerEntity, ClientModelConvertible<TEntity, TTransaction> {
 
 		override val id: TId
 	}

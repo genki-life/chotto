@@ -37,7 +37,7 @@ internal class EntityResolvingJsonEncoder<Transaction : ChottoTransaction>(
 
 			val resolvedEntitiesById: MutableMap<EntityId, Entity> = resolver
 				.resolve(ids = idsToResolve)
-				.map { it.run { transaction.toCoreModel() } }
+				.map { it.toClientModel(transaction) }
 				.associateByTo(hashMapOf(), Entity::id)
 
 			for (id in idsToResolve) {

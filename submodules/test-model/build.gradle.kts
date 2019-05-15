@@ -29,5 +29,5 @@ kotlin {
 }
 
 dependencies {
-	"kapt"(fluid("json-annotation-processor", "0.9.20"))
+	"kapt"(fluid("json-annotation-processor", "0.9.21"))
 }
