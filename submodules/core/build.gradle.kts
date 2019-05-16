@@ -16,7 +16,7 @@ kotlin {
 
 			dependencies {
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.7"))
+				api(fluid("stdlib", "0.9.8"))
 			}
 		}
 

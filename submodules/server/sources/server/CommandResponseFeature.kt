@@ -29,7 +29,7 @@ internal object CommandResponseFeature : ApplicationFeature<ApplicationCallPipel
 			proceedWith(serializeResponse(
 				data = data,
 				entityResolver = call.entityResolver as EntityResolver<ChottoTransaction>,
-				transaction = call.transaction
+				transaction = call.transactionController.transaction
 			))
 		}
 	}

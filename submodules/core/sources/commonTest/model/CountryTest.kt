@@ -1,6 +1,6 @@
 package tests
 
-import team.genki.chotto.core.*
+import com.github.fluidsonic.fluid.stdlib.*
 import kotlin.test.*
 
 

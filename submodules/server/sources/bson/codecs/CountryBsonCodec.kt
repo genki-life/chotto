@@ -1,7 +1,7 @@
 package team.genki.chotto.server
 
+import com.github.fluidsonic.fluid.stdlib.*
 import org.bson.*
-import team.genki.chotto.core.*
 
 
 internal object CountryBsonCodec : AbstractBsonCodec<Country, BsonCodingContext>() {

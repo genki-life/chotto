@@ -5,11 +5,11 @@ import io.ktor.util.*
 import io.ktor.util.pipeline.*
 
 
-internal class TransactionFeature<Context : ChottoServerContext, Transaction : ChottoTransaction>(
+internal class ChottoCallFeature<Context : ChottoServerContext, Transaction : ChottoTransaction>(
 	private val configuration: ServerConfiguration<Context, Transaction>
 ) : ApplicationFeature<ApplicationCallPipeline, Unit, Unit> {
 
-	override val key = AttributeKey<Unit>("Chotto: transaction feature")
+	override val key = AttributeKey<Unit>("Chotto: call feature")
 
 
 	@Suppress("UNCHECKED_CAST")
@@ -17,7 +17,7 @@ internal class TransactionFeature<Context : ChottoServerContext, Transaction : C
 		Unit.configure()
 
 		pipeline.intercept(ApplicationCallPipeline.Setup) {
-			call.attributes.put(AttributeKeys.call, configuration.createCall(call))
+			call.attributes.put(AttributeKeys.call, configuration.createCall())
 		}
 	}
 
@@ -30,7 +30,7 @@ internal class TransactionFeature<Context : ChottoServerContext, Transaction : C
 
 
 internal val ApplicationCall.chottoCall
-	get() = attributes[TransactionFeature.AttributeKeys.call]
+	get() = attributes[ChottoCallFeature.AttributeKeys.call]
 
 
 internal val PipelineContext<*, ApplicationCall>.chottoCall

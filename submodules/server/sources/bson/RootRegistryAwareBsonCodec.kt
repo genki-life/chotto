@@ -4,6 +4,15 @@ import org.bson.*
 import org.bson.codecs.*
 import org.bson.codecs.configuration.*
 import kotlin.reflect.*
+import java.lang.Boolean as BoxedBoolean
+import java.lang.Byte as BoxedByte
+import java.lang.Character as BoxedCharacter
+import java.lang.Double as BoxedDouble
+import java.lang.Float as BoxedFloat
+import java.lang.Integer as BoxedInteger
+import java.lang.Long as BoxedLong
+import java.lang.Short as BoxedShort
+import java.lang.Void as BoxedVoid
 
 
 interface RootRegistryAwareBsonCodec {
@@ -18,7 +27,7 @@ interface RootRegistryAwareBsonCodec {
 
 
 	fun <Value : Any> BsonReader.readValueOfType(`class`: KClass<Value>) =
-		rootRegistry[`class`.java].decode(this, decoderContext)!!
+		rootRegistry[`class`.boxed.java].decode(this, decoderContext)!!
 
 
 	fun <Value : Any> BsonReader.readValueOfTypeOrNull(name: String, `class`: KClass<Value>): Value? {
@@ -115,3 +124,22 @@ interface RootRegistryAwareBsonCodec {
 		private val encoderContext = EncoderContext.builder().build()!!
 	}
 }
+
+
+@Suppress("UNCHECKED_CAST")
+private val <T : Any> KClass<T>.boxed
+	get() =
+		if (java.isPrimitive)
+			when (this) {
+				Boolean::class -> BoxedBoolean::class
+				Byte::class -> BoxedByte::class
+				Char::class -> BoxedCharacter::class
+				Double::class -> BoxedDouble::class
+				Float::class -> BoxedFloat::class
+				Int::class -> BoxedInteger::class
+				Long::class -> BoxedLong::class
+				Short::class -> BoxedShort::class
+				else -> BoxedVoid::class
+			} as KClass<T>
+		else
+			this

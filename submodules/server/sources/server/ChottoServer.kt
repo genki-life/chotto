@@ -19,17 +19,7 @@ import kotlinx.coroutines.*
 import org.bson.codecs.configuration.*
 import org.slf4j.event.*
 import team.genki.chotto.core.*
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.MutableMap
-import kotlin.collections.flatMap
-import kotlin.collections.map
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableMapOf
-import kotlin.collections.plus
-import kotlin.collections.plusAssign
 import kotlin.collections.set
-import kotlin.collections.toList
 
 
 class ChottoServer internal constructor() {
@@ -159,7 +149,7 @@ class ChottoServer internal constructor() {
 				modules = modules
 			)
 
-			install(TransactionFeature(configuration))
+			install(ChottoCallFeature(configuration))
 			install(CommandFailureFeature)
 			install(CommandRequestFeature)
 			install(CommandResponseFeature)
@@ -178,7 +168,8 @@ class ChottoServer internal constructor() {
 
 							validate { credential ->
 								with(authenticator) {
-									val transaction = chottoCall.transaction as Transaction
+									@Suppress("UNCHECKED_CAST")
+									val transaction = chottoCall.transactionController.transaction as Transaction
 									transaction.authenticate(credential.payload)
 										.thenTake { object : Principal {} }
 								}
@@ -202,7 +193,7 @@ class ChottoServer internal constructor() {
 							val chottoCall = chottoCall
 
 							@Suppress("UNCHECKED_CAST")
-							val transaction = this.chottoCall.transaction as Transaction
+							val transaction = chottoCall.transactionController.transaction as Transaction
 
 							val result = chottoCall.commandHandler.handle(request.command)
 							val meta = endpoint.responseMetaFactory(transaction, request.command)

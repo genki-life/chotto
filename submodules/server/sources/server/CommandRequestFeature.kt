@@ -23,12 +23,16 @@ internal object CommandRequestFeature : ApplicationFeature<ApplicationCallPipeli
 			val data = subject.value as? CommandRequestPipelineData
 				?: error("unexpected value in receive pipeline: ${subject.value}")
 
+			val request = parseRequest(
+				body = receiveBody(),
+				jsonParser = data.model.jsonConverter.parser
+			)
+
+			chottoCall.transactionController.onRequestReceived(request)
+
 			proceedWith(ApplicationReceiveRequest(
 				type = subject.type,
-				value = parseRequest(
-					body = receiveBody(),
-					jsonParser = data.model.jsonConverter.parser
-				)
+				value = request
 			))
 		}
 	}

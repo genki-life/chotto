@@ -1,6 +1,7 @@
 package team.genki.chotto.core
 
 import com.github.fluidsonic.fluid.json.*
+import com.github.fluidsonic.fluid.stdlib.*
 
 
 internal object CountryJsonCodec : AbstractJSONCodec<Country, JSONCodingContext>() {

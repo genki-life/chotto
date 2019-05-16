@@ -1,7 +1,5 @@
 package team.genki.chotto.server
 
-import io.ktor.application.*
-
 
 internal class ServerConfiguration<Context : ChottoServerContext, Transaction : ChottoTransaction>(
 	val context: Context,
@@ -9,8 +7,9 @@ internal class ServerConfiguration<Context : ChottoServerContext, Transaction : 
 	val modules: List<ChottoModule<in Context, in Transaction>>
 ) {
 
-	suspend fun createCall(call: ApplicationCall): ChottoCall<Transaction> {
-		val transaction = environment.createTransaction(context = context, call = call)
+	suspend fun createCall(): ChottoCall<Transaction> {
+		val transactionController = environment.createTransactionController(context = context)
+		val transaction = transactionController.transaction
 		val transactionConfigurations = modules.map { it.configurationForTransaction(transaction) }
 
 		val commandHandlers = transactionConfigurations
@@ -40,7 +39,7 @@ internal class ServerConfiguration<Context : ChottoServerContext, Transaction : 
 		return ChottoCall(
 			commandHandler = CommandHandler(handlers = commandHandlers),
 			entityResolver = EntityResolver(resolvers = entityResolvers),
-			transaction = transaction
+			transactionController = transactionController
 		)
 	}
 }
