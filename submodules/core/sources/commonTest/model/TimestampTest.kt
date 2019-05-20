@@ -9,7 +9,7 @@ object TimestampTest : JsonTest() {
 
 	@Test
 	fun testJson() = testJson(
-		value = Timestamp(epochSecond = 0),
+		value = Timestamp.firstIn1970,
 		json = """ "1970-01-01T00:00:00Z" """
 	)
 }
