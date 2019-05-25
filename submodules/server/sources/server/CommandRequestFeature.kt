@@ -23,10 +23,7 @@ internal object CommandRequestFeature : ApplicationFeature<ApplicationCallPipeli
 			val data = subject.value as? CommandRequestPipelineData
 				?: error("unexpected value in receive pipeline: ${subject.value}")
 
-			val request = parseRequest(
-				body = receiveBody(),
-				jsonParser = data.model.jsonConverter.parser
-			)
+			val request = parseRequest(body = receiveBody())
 
 			chottoCall.transactionController.onRequestReceived(request)
 
@@ -38,22 +35,24 @@ internal object CommandRequestFeature : ApplicationFeature<ApplicationCallPipeli
 	}
 
 
-	private fun parseRequest(body: String, jsonParser: JSONCodingParser<*>) =
-		try {
-			jsonParser.parseValueOfType<CommandRequest<*, *>>(body)
-		}
-		catch (e: JSONException) {
-			if (e is JSONException.Schema || e is JSONException.Syntax) {
-				throw CommandFailure(
-					code = "invalidRequest",
-					developerMessage = e.message,
-					userMessage = CommandFailure.genericUserMessage,
-					cause = e
-				)
-			}
-
-			throw e
-		}
+	private fun parseRequest(body: String): CommandRequest<*, *> {
+		TODO() // FIXME
+	}
+//		try {
+//			jsonParser.parseValueOfType<CommandRequest<*, *>>(body)
+//		}
+//		catch (e: JSONException) {
+//			if (e is JSONException.Schema || e is JSONException.Syntax) {
+//				throw CommandFailure(
+//					code = "invalidRequest",
+//					developerMessage = e.message,
+//					userMessage = CommandFailure.genericUserMessage,
+//					cause = e
+//				)
+//			}
+//
+//			throw e
+//		}
 
 
 	private suspend fun PipelineContext<ApplicationReceiveRequest, ApplicationCall>.receiveBody(): String {

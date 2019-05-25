@@ -8,22 +8,11 @@ abstract class ClientModel<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 	commandDescriptors: Collection<Command.Typed.Descriptor<*, *>>,
 	commandRequestMetaClass: KClass<TCommandRequestMeta>,
 	commandResponseMetaClass: KClass<TCommandResponseMeta>,
-	entityTypes: Collection<EntityType<*, *>>,
-	jsonConfiguration: JsonConfiguration
+	entityTypes: Collection<EntityType<*, *>>
 ) {
 
 	val commandDescriptors: Collection<Command.Descriptor> = commandDescriptors.toList()
 	val entityTypes: Collection<EntityType<*, *>> = entityTypes.toList()
-
-	@Suppress("LeakingThis")
-	val jsonConverter = JsonConverter(
-		jsonConfiguration,
-		commandDescriptors,
-		entityTypes,
-		commandRequestMetaClass,
-		commandResponseMetaClass,
-		this::createDefaultResponseMeta
-	)
 
 
 	init {

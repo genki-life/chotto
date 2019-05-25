@@ -12,5 +12,10 @@ fun KotlinDependencyHandler.kotlinx(module: String, version: String) =
 
 
 @Suppress("unused")
+fun KotlinDependencyHandler.ktor(name: String, version: String = "1.2.0") =
+	"io.ktor:ktor-$name:$version"
+
+
+@Suppress("unused")
 fun KotlinDependencyHandler.submodule(name: String) =
 	project(":chotto-$name")

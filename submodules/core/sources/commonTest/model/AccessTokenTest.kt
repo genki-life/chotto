@@ -4,8 +4,7 @@ import team.genki.chotto.core.*
 import kotlin.test.*
 
 
-@Suppress("unused")
-object AccessTokenTest : JsonTest() {
+object AccessTokenTest {
 
 	@Test
 	fun testConfidentiality() {
@@ -14,7 +13,7 @@ object AccessTokenTest : JsonTest() {
 
 
 	@Test
-	fun testJson() = testJson(
+	fun testJson() = assertJsonSerialization(
 		value = AccessToken("value"),
 		json = """ "value" """
 	)

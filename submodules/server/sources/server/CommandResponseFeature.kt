@@ -1,6 +1,5 @@
 package team.genki.chotto.server
 
-import com.github.fluidsonic.fluid.json.*
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -44,29 +43,30 @@ internal object CommandResponseFeature : ApplicationFeature<ApplicationCallPipel
 
 		val writer = StringWriter()
 
-		EntityResolvingJsonEncoder(
-			codecProvider = JSONCodecProvider(data.model.jsonConverter.codecProvider, JSONCodecProvider.extended),
-			resolver = entityResolver,
-			transaction = transaction,
-			writer = writer
-		).apply {
-			writeMapStart()
-			run {
-				writeMapElement("status", string = "success") // must come first for now
-
-				writeMapKey("response")
-				writeMapStart()
-				run {
-					writeMapElement("meta", value = data.meta)
-					writeMapElement("result", value = data.result)
-
-					writeMapKey("entities")
-					writeEntities()
-				}
-				writeMapEnd()
-			}
-			writeMapEnd()
-		}
+		// FIXME
+//		EntityResolvingJsonEncoder(
+//			codecProvider = JSONCodecProvider(data.model.jsonConverter.codecProvider, JSONCodecProvider.extended),
+//			resolver = entityResolver,
+//			transaction = transaction,
+//			writer = writer
+//		).apply {
+//			writeMapStart()
+//			run {
+//				writeMapElement("status", string = "success") // must come first for now
+//
+//				writeMapKey("response")
+//				writeMapStart()
+//				run {
+//					writeMapElement("meta", value = data.meta)
+//					writeMapElement("result", value = data.result)
+//
+//					writeMapKey("entities")
+//					writeEntities()
+//				}
+//				writeMapEnd()
+//			}
+//			writeMapEnd()
+//		}
 
 		return TextContent(
 			text = writer.toString(),

@@ -8,8 +8,7 @@ object TestClientModel : ClientModel<TestCommandRequestMeta, TestCommandResponse
 	commandDescriptors = listOf(TestCommand),
 	commandRequestMetaClass = TestCommandRequestMeta::class,
 	commandResponseMetaClass = TestCommandResponseMeta::class,
-	entityTypes = listOf(TestId),
-	jsonConfiguration = testJsonConfiguration
+	entityTypes = listOf(TestId)
 ) {
 
 	override fun createDefaultResponseMeta() = TestCommandResponseMeta(
@@ -21,6 +20,3 @@ object TestClientModel : ClientModel<TestCommandRequestMeta, TestCommandResponse
 		property = "value"
 	)
 }
-
-
-expect val testJsonConfiguration: JsonConfiguration

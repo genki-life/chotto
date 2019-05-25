@@ -2,13 +2,7 @@ package team.genki.chotto.client
 
 import io.ktor.client.*
 import io.ktor.client.engine.*
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.utils.*
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.Url
-import io.ktor.http.content.*
+import io.ktor.http.*
 import team.genki.chotto.core.*
 
 
@@ -29,18 +23,19 @@ class ChottoClient<TModel : ClientModel<*, *>>(
 		accessToken: AccessToken?,
 		request: CommandRequest<Command.Typed<*, TResult>, *>
 	): CommandResponse<TResult, CommandResponse.Meta> {
-		val rawResponse = httpClient.post<String>(endpointUrl) {
-			body = TextContent(
-				text = model.jsonConverter.serializeCommandRequest(request as CommandRequest<Command.Typed<*, *>, Nothing>),
-				contentType = ContentType.Application.Json
-			)
-
-			accessToken?.let { header(HttpHeaders.Authorization, "Bearer ${it.value}") }
-			header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
-			header(HttpHeaders.Pragma, "no-cache")
-		}
-
-		return model.jsonConverter.parseCommandResponse(rawResponse, request.command)
+		TODO() // FIXME
+//		val rawResponse = httpClient.post<String>(endpointUrl) {
+//			body = TextContent(
+//				text = model.jsonConverter.serializeCommandRequest(request as CommandRequest<Command.Typed<*, *>, Nothing>),
+//				contentType = ContentType.Application.Json
+//			)
+//
+//			accessToken?.let { header(HttpHeaders.Authorization, "Bearer ${it.value}") }
+//			header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
+//			header(HttpHeaders.Pragma, "no-cache")
+//		}
+//
+//		return model.jsonConverter.parseCommandResponse(rawResponse, request.command)
 	}
 
 

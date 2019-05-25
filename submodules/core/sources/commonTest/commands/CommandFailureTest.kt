@@ -4,10 +4,10 @@ import team.genki.chotto.core.*
 import kotlin.test.*
 
 
-object CommandFailureTest : JsonTest() {
+object CommandFailureTest {
 
 	@Test
-	fun test() = testJson(
+	fun test() = assertJsonSerialization(
 		value = CommandFailure(
 			code = "some code",
 			developerMessage = "some developer message",

@@ -4,11 +4,10 @@ import team.genki.chotto.core.*
 import kotlin.test.*
 
 
-@Suppress("unused")
-object EmailAddressTest : JsonTest() {
+object EmailAddressTest {
 
 	@Test
-	fun testJson() = testJson(
+	fun testJson() = assertJsonSerialization(
 		value = EmailAddress("value"),
 		json = """ "value" """
 	)

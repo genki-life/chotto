@@ -14,7 +14,7 @@ kotlin {
 				api(submodule("core"))
 
 				api(kotlin("stdlib-common"))
-				api("io.ktor:ktor-client-core:1.1.3")
+				api(ktor("client-core"))
 			}
 		}
 
@@ -27,7 +27,7 @@ kotlin {
 
 				implementation(kotlin("test-common"))
 				implementation(kotlin("test-annotations-common"))
-				implementation("io.ktor:ktor-client-mock:1.1.3")
+				implementation(ktor("client-mock"))
 			}
 		}
 
@@ -37,7 +37,7 @@ kotlin {
 
 			dependencies {
 				api(kotlin("stdlib-jdk8"))
-				api("io.ktor:ktor-client-core-jvm:1.1.3")
+				api(ktor("client-core-jvm"))
 			}
 		}
 
@@ -47,7 +47,7 @@ kotlin {
 
 			dependencies {
 				implementation(kotlin("test-junit5"))
-				implementation("io.ktor:ktor-client-mock-jvm:1.1.3")
+				implementation(ktor("client-mock-jvm"))
 				implementation("org.junit.jupiter:junit-jupiter-api:5.4.0")
 
 				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")

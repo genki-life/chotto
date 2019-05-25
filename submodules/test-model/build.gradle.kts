@@ -1,11 +1,12 @@
 plugins {
 	kotlin("multiplatform")
-	kotlin("kapt")
+	//kotlin("kapt")
 }
 
 kotlin {
-	if (workaroundForKT30667) jvm()
-	else targetFromPreset(presets.getByName("jvmWithJava"), "jvm")
+	jvm {
+		//withJava()
+	}
 
 
 	sourceSets {
@@ -19,15 +20,12 @@ kotlin {
 		}
 
 		jvmMain {
-			kotlin.setSrcDirs(
-				if (workaroundForKT30667) listOf("sources/jvm", "build/generated/source/kaptKotlin/main")
-				else listOf("sources/jvm")
-			)
+			kotlin.setSrcDirs(listOf("sources/jvm"))
 			resources.setSrcDirs(emptyList())
 		}
 	}
 }
 
 dependencies {
-	"kapt"(fluid("json-annotation-processor", "0.9.21"))
+	//"kapt"(fluid("json-annotation-processor", "0.9.21"))
 }

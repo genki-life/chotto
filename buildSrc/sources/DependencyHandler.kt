@@ -8,7 +8,12 @@ fun DependencyHandler.fluid(name: String, version: String) =
 
 
 @Suppress("unused")
-fun DependencyHandler.ktor(name: String, version: String = "1.1.3") =
+fun DependencyHandler.kotlinx(module: String, version: String) =
+	"org.jetbrains.kotlinx:kotlinx-$module:$version"
+
+
+@Suppress("unused")
+fun DependencyHandler.ktor(name: String, version: String = "1.2.0") =
 	"io.ktor:ktor-$name:$version"
 
 

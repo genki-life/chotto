@@ -4,6 +4,7 @@ import io.ktor.client.engine.*
 import io.ktor.client.engine.mock.*
 import io.ktor.content.*
 import io.ktor.http.*
+import io.ktor.util.*
 import team.genki.chotto.client.*
 import team.genki.chotto.core.*
 import kotlin.test.*
@@ -100,18 +101,19 @@ object CommandTest {
 	}
 
 
+	@UseExperimental(InternalAPI::class)
 	private suspend fun test(data: CommandTestData<*>) {
 		val client = ChottoClient(
 			baseUrl = Url("https://unit.testing.local/"),
 			httpEngine = MockEngine.config {
-				check = {
-					assertEquals(url.toString(), "https://unit.testing.local/test", "HTTP request URL")
-					assertEquals(method, HttpMethod.Post, "HTTP request method")
-					assertEquals("no-cache", headers[HttpHeaders.CacheControl], "no-cache cache control header")
-					assertEquals("no-cache", headers[HttpHeaders.Pragma], "no-cache pragma header")
+				addHandler { request ->
+					assertEquals(request.url.toString(), "https://unit.testing.local/test", "HTTP request URL")
+					assertEquals(request.method, HttpMethod.Post, "HTTP request method")
+					assertEquals("no-cache", request.headers[HttpHeaders.CacheControl], "no-cache cache control header")
+					assertEquals("no-cache", request.headers[HttpHeaders.Pragma], "no-cache pragma header")
 
 					data.accessToken?.let { expectedAccessToken ->
-						assertEquals("Bearer ${expectedAccessToken.value}", headers[HttpHeaders.Authorization], "authorization header")
+						assertEquals("Bearer ${expectedAccessToken.value}", request.headers[HttpHeaders.Authorization], "authorization header")
 					}
 
 					val expectedRequestStructure = try {
@@ -121,7 +123,7 @@ object CommandTest {
 						throw AssertionError("Cannot parse expected request JSON:\n${data.serializedRequest}\n\n$e")
 					}
 
-					val actualRequestJson = (content as? TextContent)?.text ?: throw AssertionError("only TextContent supported for now")
+					val actualRequestJson = (request.body as? TextContent)?.text ?: throw AssertionError("only TextContent supported for now")
 					val actualRequestStructure = try {
 						parseJson(actualRequestJson)
 					}
@@ -131,7 +133,7 @@ object CommandTest {
 
 					assertEquals(expectedRequestStructure, actualRequestStructure, "request JSON")
 
-					responseOk(data.serializedResponse)
+					respondOk(data.serializedResponse)
 				}
 			},
 			model = TestClientModel

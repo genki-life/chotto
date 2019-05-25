@@ -1,13 +1,10 @@
-import org.gradle.jvm.tasks.Jar
-
 plugins {
 	kotlin("multiplatform")
-	kotlin("kapt")
+	id("kotlinx-serialization")
 }
 
 kotlin {
-	if (workaroundForKT30667) jvm()
-	else targetFromPreset(presets.getByName("jvmWithJava"), "jvm")
+	jvm()
 
 	sourceSets {
 		commonMain {
@@ -17,6 +14,8 @@ kotlin {
 			dependencies {
 				api(kotlin("stdlib-common"))
 				api(fluid("stdlib", "0.9.9"))
+
+				implementation(kotlinx("serialization-runtime", "0.11.0"))
 			}
 		}
 
@@ -32,15 +31,12 @@ kotlin {
 		}
 
 		jvmMain {
-			kotlin.setSrcDirs(
-				if (workaroundForKT30667) listOf("sources/jvm", "build/generated/source/kaptKotlin/main")
-				else listOf("sources/jvm")
-			)
+			kotlin.setSrcDirs(listOf("sources/jvm"))
 			resources.setSrcDirs(emptyList())
 
 			dependencies {
-				api(kotlin("stdlib-jdk8"))
-				api(fluid("json-coding-jdk8", "0.9.21"))
+				api(kotlin("stdlib-jdk8")) // FIXME Android
+				api(fluid("json-coding-jdk8", "0.9.21")) // FIXME Android
 
 				compileOnly(fluid("json-annotations", "0.9.21"))
 			}
@@ -59,12 +55,4 @@ kotlin {
 			}
 		}
 	}
-}
-
-tasks.getByName<Jar>("jvmSourcesJar") {
-	from(file("build/generated/source/kaptKotlin/main"))
-}
-
-dependencies {
-	"kapt"(fluid("json-annotation-processor", "0.9.21"))
 }
