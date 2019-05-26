@@ -18,7 +18,7 @@ kotlin {
 				implementation(kotlinx("serialization-runtime", "0.11.0"))
 
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.12"))
+				api(fluid("stdlib", "0.9.13"))
 				api(fluid("time", "0.9.4"))
 			}
 		}
