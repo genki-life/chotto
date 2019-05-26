@@ -6,5 +6,5 @@ import team.genki.chotto.core.*
 
 @Serializable
 data class TestCommandResponseMeta(
-	val property: String?
+	val property: String? = null
 ) : CommandResponseMeta

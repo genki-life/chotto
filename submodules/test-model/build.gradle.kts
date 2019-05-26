@@ -13,9 +13,9 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				api(submodule("core"))
-
 				implementation(kotlinx("serialization-runtime", "0.11.0"))
+
+				api(submodule("core"))
 			}
 		}
 

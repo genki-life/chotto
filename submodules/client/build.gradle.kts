@@ -1,9 +1,12 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.*
+
 plugins {
 	kotlin("multiplatform")
 }
 
 kotlin {
 	sourceSets {
+		iosX64()
 		jvm()
 
 		commonMain {
@@ -11,10 +14,10 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				api(submodule("core"))
-
-				api(kotlin("stdlib-common"))
 				implementation(kotlinx("serialization-runtime", "0.11.0"))
+
+				api(submodule("core"))
+				api(kotlin("stdlib-common"))
 				api(ktor("client-core"))
 			}
 		}
@@ -25,10 +28,27 @@ kotlin {
 
 			dependencies {
 				implementation(submodule("test-model"))
-
 				implementation(kotlin("test-common"))
 				implementation(kotlin("test-annotations-common"))
 				implementation(ktor("client-mock"))
+			}
+		}
+
+		getByName("iosX64Main") {
+			kotlin.setSrcDirs(listOf("sources/ios"))
+			resources.setSrcDirs(emptyList<Any>())
+
+			dependencies {
+				api(ktor("client-core-iosx64"))
+			}
+		}
+
+		getByName("iosX64Test") {
+			kotlin.setSrcDirs(listOf("sources/iosTest"))
+			resources.setSrcDirs(emptyList<Any>())
+
+			dependencies {
+				implementation(ktor("client-mock-iosx64"))
 			}
 		}
 
@@ -56,4 +76,23 @@ kotlin {
 			}
 		}
 	}
+}
+
+
+val iosTest by tasks.creating<Task> {
+	val device = findProperty("iosDevice")?.toString() ?: "iPhone 8"
+	dependsOn("linkTestDebugExecutableIosX64")
+	group = JavaBasePlugin.VERIFICATION_GROUP
+
+	doLast {
+		val binary = kotlin.targets.getByName<KotlinNativeTarget>("iosX64").binaries.getExecutable("test", "DEBUG").outputFile
+		exec {
+			println("$ xcrun simctl spawn \"$device\" \"${binary.absolutePath}\"")
+			commandLine("xcrun", "simctl", "spawn", device, binary.absolutePath)
+		}
+	}
+}
+
+tasks.named("check") {
+	dependsOn("iosTest")
 }

@@ -5,7 +5,7 @@ import kotlinx.serialization.internal.*
 
 
 @Serializable(with = CommandRequestSerializer::class)
-data class CommandRequest<out TCommand : TypedCommand<*, *>, out TMeta : CommandRequestMeta>(
+data class CommandRequest<out TCommand : TypedCommand<out TCommand, *>, out TMeta : CommandRequestMeta>(
 	val command: TCommand,
 	val meta: TMeta
 ) {

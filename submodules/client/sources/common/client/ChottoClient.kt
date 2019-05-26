@@ -6,13 +6,14 @@ import io.ktor.client.request.*
 import io.ktor.client.utils.CacheControl
 import io.ktor.http.*
 import io.ktor.http.content.*
+import kotlinx.serialization.*
 import team.genki.chotto.core.*
 
 
-class ChottoClient<TModel : ClientModel<TCommandRequestMeta, *>, TCommandRequestMeta : CommandRequestMeta>(
+class ChottoClient<TModel : ClientModel<*, *>>(
 	baseUrl: Url,
 	httpEngine: HttpClientEngineFactory<*>,
-	private val model: TModel
+	internal val model: TModel
 ) {
 
 	private val endpointUrl = baseUrl.toBuilder().appendPath(model.name).build()
@@ -22,13 +23,16 @@ class ChottoClient<TModel : ClientModel<TCommandRequestMeta, *>, TCommandRequest
 
 
 	@Suppress("UNCHECKED_CAST")
-	private suspend fun <TResult : Any, TCommand : TypedCommand<TCommand, TResult>> internalExecute(
+	internal suspend fun internalExecute(
 		accessToken: AccessToken?,
-		request: CommandRequest<TCommand, TCommandRequestMeta>
-	): CommandResponse<TResult, CommandResponseMeta> {
+		request: CommandRequest<*, *>
+	): CommandResponse<*, *> {
 		val rawResponse = httpClient.post<String>(endpointUrl) {
+			val requestSerializer = CommandRequest.serializer(request.command.definition.serializer, model.commandRequestMetaSerializer)
+				as KSerializer<CommandRequest<*, *>>
+
 			body = TextContent(
-				text = model.json.stringify(CommandRequest.serializer(request.command.definition.serializer, model.commandRequestMetaSerializer), request),
+				text = model.json.stringify(requestSerializer, request),
 				contentType = ContentType.Application.Json
 			)
 
@@ -44,34 +48,26 @@ class ChottoClient<TModel : ClientModel<TCommandRequestMeta, *>, TCommandRequest
 
 		when (status) {
 			is CommandRequestStatus.Failure -> throw status.cause
-			is CommandRequestStatus.Success<*, *> -> return status.response as CommandResponse<TResult, CommandResponseMeta>
+			is CommandRequestStatus.Success<*, *> -> return status.response
 		}
 	}
-
-
-	internal suspend fun <TCommand : TypedCommand<TCommand, TResult>, TResult : Any> internalExecute(
-		accessToken: AccessToken?,
-		command: TCommand
-	): CommandResponse<TResult, CommandResponseMeta> =
-		internalExecute(
-			accessToken = accessToken,
-			request = CommandRequest(
-				command = command,
-				meta = model.createRequestMetaForCommand(command)
-			)
-		)
 }
 
 
 @Suppress("UNCHECKED_CAST")
 suspend fun <
-	TModel : ClientModel<TCommandRequestMeta, TCommandResponseMeta>,
-	TCommand : TypedCommand<TCommand, TResult>,
-	TCommandRequestMeta : CommandRequestMeta,
+	TModel : ClientModel<*, TCommandResponseMeta>,
 	TCommandResponseMeta : CommandResponseMeta,
 	TResult : Any
-	> ChottoClient<TModel, TCommandRequestMeta>.execute(
+	>
+	ChottoClient<TModel>.execute(
 	accessToken: AccessToken?,
-	command: TCommand
+	command: TypedCommand<*, TResult>
 ): CommandResponse<TResult, TCommandResponseMeta> =
-	internalExecute(accessToken = accessToken, command = command) as CommandResponse<TResult, TCommandResponseMeta>
+	internalExecute(
+		accessToken = accessToken,
+		request = CommandRequest(
+			command = command,
+			meta = model.createRequestMetaForCommand(command)
+		)
+	) as CommandResponse<TResult, TCommandResponseMeta>
