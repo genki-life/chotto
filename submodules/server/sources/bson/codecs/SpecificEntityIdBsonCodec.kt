@@ -7,7 +7,7 @@ import team.genki.chotto.core.*
 
 @Suppress("UNCHECKED_CAST")
 internal class SpecificEntityIdBsonCodec(
-	private val type: EntityType<*, *>
+	private val type: EntityType.Typed<*, *>
 ) : AbstractBsonCodec<EntityId.Typed<*, *>, BsonCodingContext>(valueClass = type.idClass.java as Class<EntityId.Typed<*, *>>) {
 
 	override fun BsonReader.decode(context: BsonCodingContext): EntityId.Typed<*, *> {

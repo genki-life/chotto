@@ -20,9 +20,10 @@ interface Command {
 	}
 
 
-	abstract class Typed<TCommand : Typed<TCommand, TResult>, TResult : Any>(
-		override val descriptor: Descriptor<TCommand, TResult>
-	) : Command {
+	abstract class Typed<TCommand : Typed<TCommand, TResult>, TResult : Any> : Command {
+
+		abstract override val descriptor: Descriptor<TCommand, TResult>
+
 
 		interface Descriptor<TCommand : Typed<TCommand, TResult>, TResult : Any> : Command.Descriptor {
 

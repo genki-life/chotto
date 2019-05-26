@@ -1,17 +1,21 @@
 package tests
 
+import kotlinx.serialization.*
 import team.genki.chotto.core.*
-import tests.TestCommand.*
 
 
+@Serializable
 data class TestCommand(
 	val property: String
-) : Command.Typed<TestCommand, Result>(Companion) {
+) : Command.Typed<TestCommand, TestCommandResult>() {
 
-	data class Result(
-		val property: String
-	)
+	override val descriptor get() = Companion
 
-
-	companion object : Descriptor<TestCommand, Result> by commandDescriptor("test")
+	companion object : Descriptor<TestCommand, TestCommandResult> by commandDescriptor("test")
 }
+
+
+@Serializable
+data class TestCommandResult(
+	val property: String
+)

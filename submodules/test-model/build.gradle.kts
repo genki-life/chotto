@@ -1,31 +1,27 @@
 plugins {
 	kotlin("multiplatform")
-	//kotlin("kapt")
+	id("kotlinx-serialization")
 }
 
 kotlin {
-	jvm {
-		//withJava()
-	}
+	jvm()
 
 
 	sourceSets {
 		commonMain {
 			kotlin.setSrcDirs(listOf("sources/common"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				api(submodule("core"))
+
+				implementation(kotlinx("serialization-runtime", "0.11.0"))
 			}
 		}
 
 		jvmMain {
 			kotlin.setSrcDirs(listOf("sources/jvm"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 		}
 	}
-}
-
-dependencies {
-	//"kapt"(fluid("json-annotation-processor", "0.9.21"))
 }

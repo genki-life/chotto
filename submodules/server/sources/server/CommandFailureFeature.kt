@@ -1,6 +1,5 @@
 package team.genki.chotto.server
 
-import com.github.fluidsonic.fluid.json.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -10,13 +9,16 @@ import io.ktor.response.*
 import io.ktor.util.*
 import io.ktor.util.pipeline.*
 import kotlinx.coroutines.*
+import kotlinx.serialization.json.*
 import org.slf4j.*
 import team.genki.chotto.core.*
 
 
 internal object CommandFailureFeature : ApplicationFeature<ApplicationCallPipeline, Unit, Unit> {
 
+	private val json = Json(JsonConfiguration.Stable.copy(prettyPrint = true, indent = "\t"))
 	private val log = LoggerFactory.getLogger(CommandFailureFeature::class.java)!!
+
 
 	override val key = AttributeKey<Unit>("Chotto: command failure feature")
 
@@ -113,21 +115,8 @@ internal object CommandFailureFeature : ApplicationFeature<ApplicationCallPipeli
 			response.status(status)
 		}
 
-		respond(WriterContent(
-			body = {
-				JSONWriter.build(this).use { writer ->
-					writer.writeIntoMap {
-						writeMapElement("status", string = "failure") // must come first for now
-						writeMapElement("cause") {
-							writeIntoMap {
-								writeMapElement("code", string = failure.code)
-								writeMapElement("developerMessage", string = failure.developerMessage)
-								writeMapElement("userMessage", string = failure.userMessage)
-							}
-						}
-					}
-				}
-			},
+		respond(TextContent(
+			text = json.stringify(CommandRequestStatus.Failure.serializer(), CommandRequestStatus.Failure(cause = failure)),
 			contentType = ContentType.Application.Json.withCharset(Charsets.UTF_8)
 		))
 	}

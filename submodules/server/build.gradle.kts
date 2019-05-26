@@ -12,6 +12,7 @@ dependencies {
 	api(ktor("auth-jwt"))
 	api(ktor("server-netty"))
 
+	implementation(kotlinx("serialization-runtime", "0.11.0"))
 	implementation("ch.qos.logback:logback-classic:1.2.1")
 }
 

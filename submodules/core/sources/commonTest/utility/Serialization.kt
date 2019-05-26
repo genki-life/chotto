@@ -12,7 +12,7 @@ internal inline fun <reified Value : Any> assertJsonSerialization(
 	serializer: KSerializer<Value> = Value::class.serializer(),
 	noinline equals: ((a: Value, b: Value) -> Boolean)? = null
 ) {
-	val actualJson = Json.stringify(serializer, value)
+	val actualJson = TestClientModel.prettyJson.stringify(serializer, value)
 	val actualStructure = try {
 		Json.parse<JsonElement>(actualJson)
 	}
@@ -29,7 +29,7 @@ internal inline fun <reified Value : Any> assertJsonSerialization(
 
 	assertEquals(expectedStructure, actualStructure, "serialized value")
 
-	val actualValue = Json.parse(serializer, json)
+	val actualValue = TestClientModel.prettyJson.parse(serializer, json)
 
 	if (equals != null)
 		assertTrue(equals(value, actualValue), "parsed value ==> expected: $value but was: $actualValue")

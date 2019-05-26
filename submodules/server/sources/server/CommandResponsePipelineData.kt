@@ -4,7 +4,7 @@ import team.genki.chotto.core.*
 
 
 internal class CommandResponsePipelineData(
-	val meta: CommandResponse.Meta,
+	val meta: CommandResponseMeta,
 	val model: ClientModel<*, *>,
 	val result: Any
 )

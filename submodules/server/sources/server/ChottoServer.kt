@@ -75,7 +75,7 @@ class ChottoServer internal constructor() {
 		}
 
 
-		fun <TCommandRequestMeta : CommandRequest.Meta, TCommandResponseMeta : CommandResponse.Meta> endpoint(
+		fun <TCommandRequestMeta : CommandRequestMeta, TCommandResponseMeta : CommandResponseMeta> endpoint(
 			model: ClientModel<TCommandRequestMeta, TCommandResponseMeta>,
 			responseMetaFactory: suspend Transaction.(command: Command) -> TCommandResponseMeta,
 			authenticator: Authenticator<Transaction>? = null
@@ -217,7 +217,7 @@ class ChottoServer internal constructor() {
 		private inner class Endpoint(
 			val authenticator: Authenticator<Transaction>?,
 			val model: ClientModel<*, *>,
-			val responseMetaFactory: suspend Transaction.(Command) -> CommandResponse.Meta
+			val responseMetaFactory: suspend Transaction.(Command) -> CommandResponseMeta
 		)
 	}
 

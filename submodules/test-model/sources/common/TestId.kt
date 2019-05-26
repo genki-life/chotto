@@ -1,11 +1,13 @@
 package tests
 
+import kotlinx.serialization.*
 import team.genki.chotto.core.*
 
 
+@Serializable(with = EntityIdSerializer::class)
 data /*inline*/ class TestId(override val value: String) : EntityId.Typed<TestId, TestEntity> {
 
-	override val type: Companion
+	override val type
 		get() = Companion
 
 
@@ -13,5 +15,5 @@ data /*inline*/ class TestId(override val value: String) : EntityId.Typed<TestId
 		serialize()
 
 
-	companion object : EntityType<TestId, TestEntity> by "tests" using ::TestId
+	companion object : EntityType.Typed<TestId, TestEntity> by "tests" using ::TestId
 }

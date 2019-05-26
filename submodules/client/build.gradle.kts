@@ -8,19 +8,20 @@ kotlin {
 
 		commonMain {
 			kotlin.setSrcDirs(listOf("sources/common"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				api(submodule("core"))
 
 				api(kotlin("stdlib-common"))
+				implementation(kotlinx("serialization-runtime", "0.11.0"))
 				api(ktor("client-core"))
 			}
 		}
 
 		commonTest {
 			kotlin.setSrcDirs(listOf("sources/commonTest"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				implementation(submodule("test-model"))
@@ -33,7 +34,7 @@ kotlin {
 
 		jvmMain {
 			kotlin.setSrcDirs(listOf("sources/jvmMain"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				api(kotlin("stdlib-jdk8"))
@@ -43,7 +44,7 @@ kotlin {
 
 		jvmTest {
 			kotlin.setSrcDirs(listOf("sources/jvmTest"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				implementation(kotlin("test-junit5"))

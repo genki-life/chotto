@@ -39,10 +39,10 @@ abstract class ChottoModule<Context : ChottoServerContext, Transaction : ChottoT
 
 		inner class Ids internal constructor() {
 
-			internal val types = mutableListOf<EntityType<*, *>>()
+			internal val types = mutableListOf<EntityType.Typed<*, *>>()
 
 
-			operator fun invoke(vararg types: EntityType<*, *>) {
+			operator fun invoke(vararg types: EntityType.Typed<*, *>) {
 				this.types += types
 			}
 		}

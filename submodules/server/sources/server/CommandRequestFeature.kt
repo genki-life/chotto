@@ -1,12 +1,12 @@
 package team.genki.chotto.server
 
-import com.github.fluidsonic.fluid.json.*
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.util.*
-import io.ktor.util.cio.*
 import io.ktor.util.pipeline.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 import team.genki.chotto.core.*
 
 
@@ -23,7 +23,7 @@ internal object CommandRequestFeature : ApplicationFeature<ApplicationCallPipeli
 			val data = subject.value as? CommandRequestPipelineData
 				?: error("unexpected value in receive pipeline: ${subject.value}")
 
-			val request = parseRequest(body = receiveBody())
+			val request = parseRequest(body = receiveBody(), json = data.model.json)
 
 			chottoCall.transactionController.onRequestReceived(request)
 
@@ -35,24 +35,18 @@ internal object CommandRequestFeature : ApplicationFeature<ApplicationCallPipeli
 	}
 
 
-	private fun parseRequest(body: String): CommandRequest<*, *> {
-		TODO() // FIXME
-	}
-//		try {
-//			jsonParser.parseValueOfType<CommandRequest<*, *>>(body)
-//		}
-//		catch (e: JSONException) {
-//			if (e is JSONException.Schema || e is JSONException.Syntax) {
-//				throw CommandFailure(
-//					code = "invalidRequest",
-//					developerMessage = e.message,
-//					userMessage = CommandFailure.genericUserMessage,
-//					cause = e
-//				)
-//			}
-//
-//			throw e
-//		}
+	private fun parseRequest(body: String, json: Json) =
+		try {
+			json.parse(CommandRequest.serializer(), body)
+		}
+		catch (e: SerializationException) {
+			throw CommandFailure(
+				code = "invalidRequest",
+				developerMessage = e.message!!,
+				userMessage = CommandFailure.genericUserMessage,
+				cause = e
+			)
+		}
 
 
 	private suspend fun PipelineContext<ApplicationReceiveRequest, ApplicationCall>.receiveBody(): String {

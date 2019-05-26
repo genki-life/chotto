@@ -9,11 +9,12 @@ kotlin {
 	sourceSets {
 		commonMain {
 			kotlin.setSrcDirs(listOf("sources/common"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.9"))
+				api(fluid("stdlib", "0.9.11"))
+				api(fluid("time", "0.9.1"))
 
 				implementation(kotlinx("serialization-runtime", "0.11.0"))
 			}
@@ -21,7 +22,7 @@ kotlin {
 
 		commonTest {
 			kotlin.setSrcDirs(listOf("sources/commonTest"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				implementation(submodule("test-model"))
@@ -32,19 +33,16 @@ kotlin {
 
 		jvmMain {
 			kotlin.setSrcDirs(listOf("sources/jvm"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				api(kotlin("stdlib-jdk8")) // FIXME Android
-				api(fluid("json-coding-jdk8", "0.9.21")) // FIXME Android
-
-				compileOnly(fluid("json-annotations", "0.9.21"))
 			}
 		}
 
 		jvmTest {
 			kotlin.setSrcDirs(listOf("sources/jvmTest"))
-			resources.setSrcDirs(emptyList())
+			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
 				implementation(kotlin("test-junit5"))

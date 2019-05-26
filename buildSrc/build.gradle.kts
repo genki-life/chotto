@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.*
 
 
 plugins {
-	kotlin("jvm") version "1.3.40-eap-32"
+	kotlin("jvm") version "1.3.31"
 	`kotlin-dsl`
 }
 

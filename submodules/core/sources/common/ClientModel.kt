@@ -1,18 +1,37 @@
 package team.genki.chotto.core
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+import kotlinx.serialization.modules.*
 import kotlin.reflect.*
 
 
-abstract class ClientModel<TCommandRequestMeta : CommandRequest.Meta, TCommandResponseMeta : CommandResponse.Meta>(
+abstract class ClientModel<TCommandRequestMeta : CommandRequestMeta, TCommandResponseMeta : CommandResponseMeta>(
 	val name: String,
-	commandDescriptors: Collection<Command.Typed.Descriptor<*, *>>,
-	commandRequestMetaClass: KClass<TCommandRequestMeta>,
-	commandResponseMetaClass: KClass<TCommandResponseMeta>,
-	entityTypes: Collection<EntityType<*, *>>
+	commandDescriptors: Set<Command.Typed.Descriptor<*, *>>,
+	val commandRequestMetaClass: KClass<TCommandRequestMeta>,
+	val commandResponseMetaClass: KClass<TCommandResponseMeta>,
+	entityTypes: Set<EntityType<*, *>>
 ) {
 
-	val commandDescriptors: Collection<Command.Descriptor> = commandDescriptors.toList()
-	val entityTypes: Collection<EntityType<*, *>> = entityTypes.toList()
+	val commandDescriptors = commandDescriptors.toSet()
+	val entityTypes = entityTypes.toSet()
+
+	@UseExperimental(ImplicitReflectionSerializer::class)
+	val serializationContext = serializersModuleOf(mapOf(
+		CommandRequest::class to ConcreteCommandRequestSerializer(commandDescriptors = commandDescriptors, metaSerializer = commandRequestMetaClass.serializer()),
+		EntityId::class to ConcreteEntityIdSerializer(types = entityTypes)
+	))
+
+	val json = Json(
+		configuration = JsonConfiguration.Stable,
+		context = serializationContext
+	)
+
+	val prettyJson = Json(
+		configuration = JsonConfiguration.Stable.copy(prettyPrint = true, indent = "\t"),
+		context = serializationContext
+	)
 
 
 	init {
@@ -30,7 +49,7 @@ abstract class ClientModel<TCommandRequestMeta : CommandRequest.Meta, TCommandRe
 
 		entityTypes.groupBy { it.idClass }
 			.forEach { (idClass, descriptors) ->
-				check(descriptors.size == 1) { "multiple entity types have the same ID class: ${idClass.qualifiedName}" }
+				check(descriptors.size == 1) { "multiple entity types have the same ID class: $idClass" }
 			}
 	}
 

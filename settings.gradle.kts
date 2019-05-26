@@ -16,13 +16,6 @@ submodule("test-model")
 enableFeaturePreview("GRADLE_METADATA")
 
 
-//if (System.getProperty("user.name") == "marc") {
-//	includeBuild("../fluid-library")
-//	includeBuild("../fluid-stdlib")
-//	includeBuild("../fluid-time")
-//}
-
-
 fun submodule(name: String) {
 	val projectName = ":chotto-$name"
 

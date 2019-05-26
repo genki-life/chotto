@@ -5,10 +5,10 @@ import team.genki.chotto.core.*
 
 object TestClientModel : ClientModel<TestCommandRequestMeta, TestCommandResponseMeta>(
 	name = "test",
-	commandDescriptors = listOf(TestCommand),
+	commandDescriptors = setOf(TestCommand),
 	commandRequestMetaClass = TestCommandRequestMeta::class,
 	commandResponseMetaClass = TestCommandResponseMeta::class,
-	entityTypes = listOf(TestId)
+	entityTypes = setOf(TestId)
 ) {
 
 	override fun createDefaultResponseMeta() = TestCommandResponseMeta(
