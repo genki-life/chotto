@@ -19,7 +19,7 @@ kotlin {
 
 				api(kotlin("stdlib-common"))
 				api(fluid("stdlib", "0.9.12"))
-				api(fluid("time", "0.9.2"))
+				api(fluid("time", "0.9.4"))
 			}
 		}
 
