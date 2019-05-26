@@ -5,7 +5,7 @@ import kotlinx.serialization.internal.*
 
 
 @Serializable(with = CommandRequestSerializer::class)
-data class CommandRequest<out TCommand : Command.Typed<*, *>, out TMeta : CommandRequestMeta>(
+data class CommandRequest<out TCommand : TypedCommand<*, *>, out TMeta : CommandRequestMeta>(
 	val command: TCommand,
 	val meta: TMeta
 ) {
@@ -46,7 +46,7 @@ sealed class CommandRequestStatus {
 
 
 @Serializer(forClass = CommandRequest::class)
-internal class CommandRequestSerializer<TCommand : Command.Typed<*, *>, TMeta : CommandRequestMeta> : KSerializer<CommandRequest<TCommand, TMeta>> {
+internal class CommandRequestSerializer<TCommand : TypedCommand<*, *>, TMeta : CommandRequestMeta> : KSerializer<CommandRequest<TCommand, TMeta>> {
 
 	override val descriptor = StringDescriptor.withName("team.genki.chotto.core.EntityId")
 
@@ -121,7 +121,6 @@ private class CommandRequestStatusSerializer<TResult : Any, TMeta : CommandRespo
 
 
 	@Suppress("UNCHECKED_CAST")
-	@UseExperimental(ImplicitReflectionSerializer::class)
 	override fun serialize(encoder: Encoder, obj: CommandRequestStatus) {
 		encoder.beginStructure(descriptor).apply {
 			when (obj) {

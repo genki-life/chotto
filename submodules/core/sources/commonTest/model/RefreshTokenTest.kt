@@ -15,6 +15,7 @@ object RefreshTokenTest {
 	@Test
 	fun testJson() = assertJsonSerialization(
 		value = RefreshToken("value"),
-		json = """ "value" """
+		json = """ "value" """,
+		serializer = RefreshToken.serializer()
 	)
 }

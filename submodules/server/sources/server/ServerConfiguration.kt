@@ -15,12 +15,12 @@ internal class ServerConfiguration<Context : ChottoServerContext, Transaction : 
 		val commandHandlers = transactionConfigurations
 			.flatMap { it.commands.handlers }
 			.also { handlers ->
-				handlers.groupBy { it.descriptor }
+				handlers.groupBy { it.definition }
 					.values
 					.firstOrNull { it.size > 1 }
-					?.let { it.first().descriptor }
-					?.let { descriptor ->
-						error("Multiple handlers registered for command '${descriptor.name}' (${descriptor.commandClass.qualifiedName}")
+					?.let { it.first().definition }
+					?.let { definition ->
+						error("Multiple handlers registered for command '$definition'")
 					}
 			}
 
@@ -32,7 +32,7 @@ internal class ServerConfiguration<Context : ChottoServerContext, Transaction : 
 					.firstOrNull { it.size > 1 }
 					?.let { it.first().type }
 					?.let { type ->
-						error("Multiple resolvers registered for entity type '${type.namespace}' (${type.idClass.qualifiedName}")
+						error("Multiple resolvers registered for entity type '$type'")
 					}
 			}
 

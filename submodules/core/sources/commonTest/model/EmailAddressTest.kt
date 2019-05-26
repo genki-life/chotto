@@ -9,6 +9,7 @@ object EmailAddressTest {
 	@Test
 	fun testJson() = assertJsonSerialization(
 		value = EmailAddress("value"),
-		json = """ "value" """
+		json = """ "value" """,
+		serializer = EmailAddress.serializer()
 	)
 }

@@ -7,11 +7,19 @@ import team.genki.chotto.core.*
 @Serializable
 data class TestCommand(
 	val property: String
-) : Command.Typed<TestCommand, TestCommandResult>() {
+) : TypedCommand<TestCommand, TestCommandResult>() {
 
-	override val descriptor get() = Companion
+	override val definition get() = Meta.definition
 
-	companion object : Descriptor<TestCommand, TestCommandResult> by commandDescriptor("test")
+
+	companion object Meta : TypedCommandMeta<TestCommand, TestCommandResult> {
+
+		override val definition = TypedCommandDefinition(
+			name = "test",
+			resultSerializer = TestCommandResult.serializer(),
+			serializer = serializer()
+		)
+	}
 }
 
 

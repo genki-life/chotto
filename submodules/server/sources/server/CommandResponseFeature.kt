@@ -39,7 +39,6 @@ internal object CommandResponseFeature : ApplicationFeature<ApplicationCallPipel
 
 
 	@Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER", "CANNOT_OVERRIDE_INVISIBLE_MEMBER")
-	@UseExperimental(ImplicitReflectionSerializer::class)
 	private suspend fun serializeResponse(
 		data: CommandResponsePipelineData,
 		entityResolver: EntityResolver<ChottoTransaction>,
@@ -47,8 +46,8 @@ internal object CommandResponseFeature : ApplicationFeature<ApplicationCallPipel
 	): OutgoingContent {
 		// we can't use KSerializer directly due to on-the-fly entity resolution
 
-		val resultSerializer = data.result::class.serializer() as KSerializer<Any>
-		val metaSerializer = data.model.commandResponseMetaClass.serializer() as KSerializer<CommandResponseMeta>
+		val resultSerializer = data.command.definition.resultSerializer as KSerializer<Any>
+		val metaSerializer = data.model.commandResponseMetaSerializer as KSerializer<CommandResponseMeta>
 		val responseSerializer = CommandResponse.serializer(resultSerializer, metaSerializer)
 		val collectingEntityIdSerializer = CollectingEntityIdSerializer(
 			context = data.model.serializationContext,

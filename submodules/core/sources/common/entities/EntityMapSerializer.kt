@@ -38,9 +38,8 @@ internal object EntityMapSerializer : KSerializer<Map<EntityId, Entity>> {
 	}
 
 
-	@UseExperimental(ImplicitReflectionSerializer::class)
 	private fun readEntry(decoder: CompositeDecoder, index: Int, target: MutableMap<EntityId, Entity>, checkIndex: Boolean = true) {
-		val key = decoder.decodeSerializableElement(descriptor, index, keySerializer)
+		val id = decoder.decodeSerializableElement(descriptor, index, keySerializer)
 
 		val valueIndex =
 			if (checkIndex)
@@ -51,25 +50,24 @@ internal object EntityMapSerializer : KSerializer<Map<EntityId, Entity>> {
 				index + 1
 
 		@Suppress("UNCHECKED_CAST")
-		val valueSerializer = key.type.entityClass.serializer() as KSerializer<Entity>
+		val valueSerializer = id.type.entitySerializer as KSerializer<Entity>
 
-		val value = decoder.decodeSerializableElement(descriptor, valueIndex, valueSerializer)
+		val entity = decoder.decodeSerializableElement(descriptor, valueIndex, valueSerializer)
 
-		target[key] = value
+		target[id] = entity
 	}
 
 
-	@UseExperimental(ImplicitReflectionSerializer::class)
 	override fun serialize(encoder: Encoder, obj: Map<EntityId, Entity>) {
 		encoder.beginCollection(descriptor, obj.size, *typeParams).apply {
 			var index = 0
-			for ((key, value) in obj) {
-				encodeSerializableElement(descriptor, index++, keySerializer, key)
+			for ((id, entity) in obj) {
+				encodeSerializableElement(descriptor, index++, keySerializer, id)
 
 				@Suppress("UNCHECKED_CAST")
-				val valueSerializer = key.type.entityClass.serializer() as KSerializer<Entity>
+				val valueSerializer = id.type.entitySerializer as KSerializer<Entity>
 
-				encodeSerializableElement(descriptor, index++, valueSerializer, value)
+				encodeSerializableElement(descriptor, index++, valueSerializer, entity)
 			}
 
 			endStructure(descriptor)

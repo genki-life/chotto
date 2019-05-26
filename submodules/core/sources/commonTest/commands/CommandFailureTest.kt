@@ -18,6 +18,7 @@ object CommandFailureTest {
 			"developerMessage": "some developer message",
 			"userMessage": "some user message"
 		}""",
+		serializer = CommandFailure.serializer(),
 		equals = { a, b ->
 			a.code == b.code && a.developerMessage == b.developerMessage && a.userMessage == b.userMessage && a.cause == b.cause
 		}

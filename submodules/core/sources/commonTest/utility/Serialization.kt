@@ -5,23 +5,25 @@ import kotlinx.serialization.json.*
 import kotlin.test.*
 
 
-@UseExperimental(ImplicitReflectionSerializer::class)
+private val jsonSerializer = TestClientModel.prettyJson
+
+
 internal inline fun <reified Value : Any> assertJsonSerialization(
 	value: Value,
 	json: String,
-	serializer: KSerializer<Value> = Value::class.serializer(),
+	serializer: KSerializer<Value>,
 	noinline equals: ((a: Value, b: Value) -> Boolean)? = null
 ) {
-	val actualJson = TestClientModel.prettyJson.stringify(serializer, value)
+	val actualJson = jsonSerializer.stringify(serializer, value)
 	val actualStructure = try {
-		Json.parse<JsonElement>(actualJson)
+		jsonSerializer.parse(JsonElement.serializer(), actualJson)
 	}
 	catch (e: Exception) {
 		throw Exception("Cannot parse actual JSON:\n$actualJson", e)
 	}
 
 	val expectedStructure = try {
-		Json.parse<JsonElement>(json)
+		jsonSerializer.parse(JsonElement.serializer(), json)
 	}
 	catch (e: Exception) {
 		throw Exception("Cannot parse expected JSON:\n$json", e)
@@ -29,7 +31,7 @@ internal inline fun <reified Value : Any> assertJsonSerialization(
 
 	assertEquals(expectedStructure, actualStructure, "serialized value")
 
-	val actualValue = TestClientModel.prettyJson.parse(serializer, json)
+	val actualValue = jsonSerializer.parse(serializer, json)
 
 	if (equals != null)
 		assertTrue(equals(value, actualValue), "parsed value ==> expected: $value but was: $actualValue")

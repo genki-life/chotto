@@ -15,6 +15,7 @@ object PasswordTest {
 	@Test
 	fun testJson() = assertJsonSerialization(
 		value = Password("value"),
-		json = """ "value" """
+		json = """ "value" """,
+		serializer = Password.serializer()
 	)
 }

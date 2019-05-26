@@ -24,6 +24,7 @@ object CommandRequestTest {
 			"command": {
 				"property": "value"
 			}
-		}"""
+		}""",
+		serializer = CommandRequest.serializer()
 	)
 }

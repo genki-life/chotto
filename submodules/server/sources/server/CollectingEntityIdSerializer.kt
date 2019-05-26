@@ -34,7 +34,6 @@ internal class CollectingEntityIdSerializer<Transaction : ChottoTransaction>(
 	}
 
 
-	@UseExperimental(ImplicitReflectionSerializer::class)
 	suspend fun writeTo(encoder: Encoder) {
 		val idSerializer = base
 		val dummyEntitySerializer = PolymorphicSerializer(Entity::class)
@@ -56,7 +55,7 @@ internal class CollectingEntityIdSerializer<Transaction : ChottoTransaction>(
 					encodeSerializableElement(descriptor, index++, idSerializer, entity.id)
 
 					@Suppress("UNCHECKED_CAST")
-					val valueSerializer = entity::class.serializer() as KSerializer<Entity>
+					val valueSerializer = entity.id.type.entitySerializer as KSerializer<Entity>
 
 					encodeSerializableElement(descriptor, index++, valueSerializer, entity)
 				}
