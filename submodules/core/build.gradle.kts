@@ -43,6 +43,11 @@ kotlin {
 			}
 		}
 
+		getByName("iosX64Test") {
+			kotlin.setSrcDirs(listOf("sources/iosTest"))
+			resources.setSrcDirs(emptyList<Any>())
+		}
+
 		jvmMain {
 			kotlin.setSrcDirs(listOf("sources/jvm"))
 			resources.setSrcDirs(emptyList<Any>())

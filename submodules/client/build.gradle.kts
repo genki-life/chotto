@@ -5,10 +5,10 @@ plugins {
 }
 
 kotlin {
-	sourceSets {
-		iosX64()
-		jvm()
+	iosX64()
+	jvm()
 
+	sourceSets {
 		commonMain {
 			kotlin.setSrcDirs(listOf("sources/common"))
 			resources.setSrcDirs(emptyList<Any>())
