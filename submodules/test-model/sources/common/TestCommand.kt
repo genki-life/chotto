@@ -7,7 +7,7 @@ import team.genki.chotto.core.*
 @Serializable
 data class TestCommand(
 	val property: String
-) : TypedCommand<TestCommand, TestCommandResult>() {
+) : TypedCommand<TestCommand, TestCommandResult> {
 
 	override val definition get() = Meta.definition
 

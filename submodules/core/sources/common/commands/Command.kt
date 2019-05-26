@@ -26,7 +26,7 @@ interface CommandMeta {
 }
 
 
-abstract class TypedCommand<TCommand : TypedCommand<TCommand, TResult>, TResult : Any> : Command, TypedCommandMeta<TCommand, TResult>
+interface TypedCommand<TCommand : TypedCommand<TCommand, TResult>, TResult : Any> : Command, TypedCommandMeta<TCommand, TResult>
 
 
 class TypedCommandDefinition<TCommand : TypedCommand<TCommand, TResult>, TResult : Any>(
