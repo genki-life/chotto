@@ -3,23 +3,21 @@ package team.genki.chotto.core
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.*
-import kotlin.reflect.*
 
 
 abstract class ClientModel<TCommandRequestMeta : CommandRequestMeta, TCommandResponseMeta : CommandResponseMeta>(
 	val name: String,
-	commandDescriptors: Set<Command.Typed.Descriptor<*, *>>,
-	val commandRequestMetaClass: KClass<TCommandRequestMeta>,
-	val commandResponseMetaClass: KClass<TCommandResponseMeta>,
+	commandDefinitions: Set<TypedCommandMeta<*, *>>,
+	val commandRequestMetaSerializer: KSerializer<TCommandRequestMeta>,
+	val commandResponseMetaSerializer: KSerializer<TCommandResponseMeta>,
 	entityTypes: Set<EntityType<*, *>>
 ) {
 
-	val commandDescriptors = commandDescriptors.toSet()
+	val commandDefinitions: Set<TypedCommandDefinition<*, *>> = commandDefinitions.mapTo(hashSetOf()) { it.definition }
 	val entityTypes = entityTypes.toSet()
 
-	@UseExperimental(ImplicitReflectionSerializer::class)
 	val serializationContext = serializersModuleOf(mapOf(
-		CommandRequest::class to ConcreteCommandRequestSerializer(commandDescriptors = commandDescriptors, metaSerializer = commandRequestMetaClass.serializer()),
+		CommandRequest::class to ConcreteCommandRequestSerializer(commandDefinitions = this.commandDefinitions, metaSerializer = commandRequestMetaSerializer),
 		EntityId::class to ConcreteEntityIdSerializer(types = entityTypes)
 	))
 
@@ -37,19 +35,19 @@ abstract class ClientModel<TCommandRequestMeta : CommandRequestMeta, TCommandRes
 	init {
 		require(name.matches("^[a-zA-Z0-9_.-]+$".toRegex())) { "name must not be empty and contain only letters, digits, '_', '-' and '.'" }
 
-		commandDescriptors.groupBy { it.name }
-			.forEach { (name, descriptors) ->
-				check(descriptors.size == 1) { "multiple commands have the same name: $name" }
+		this.commandDefinitions.groupBy { it.name }
+			.forEach { (name, definitions) ->
+				check(definitions.size == 1) { "multiple commands have the same name: $name" }
 			}
 
-		entityTypes.groupBy { it.namespace }
-			.forEach { (namespace, descriptors) ->
-				check(descriptors.size == 1) { "multiple entity types have the same namespace: $namespace" }
+		this.entityTypes.groupBy { it.namespace }
+			.forEach { (namespace, types) ->
+				check(types.size == 1) { "multiple entity types have the same namespace: $namespace" }
 			}
 
-		entityTypes.groupBy { it.idClass }
-			.forEach { (idClass, descriptors) ->
-				check(descriptors.size == 1) { "multiple entity types have the same ID class: $idClass" }
+		this.entityTypes.groupBy { it.idClass }
+			.forEach { (idClass, types) ->
+				check(types.size == 1) { "multiple entity types have the same ID class: $idClass" }
 			}
 	}
 

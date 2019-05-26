@@ -1,44 +1,49 @@
 package team.genki.chotto.core
 
-import team.genki.chotto.core.Command.*
-import kotlin.reflect.*
+import kotlinx.serialization.*
 
 
-interface Command {
-
-	val descriptor: Descriptor
-
+interface Command : CommandMeta {
 
 	companion object
-
-
-	interface Descriptor {
-
-		val commandClass: KClass<out Command>
-		val name: String
-		val resultClass: KClass<*>
-	}
-
-
-	abstract class Typed<TCommand : Typed<TCommand, TResult>, TResult : Any> : Command {
-
-		abstract override val descriptor: Descriptor<TCommand, TResult>
-
-
-		interface Descriptor<TCommand : Typed<TCommand, TResult>, TResult : Any> : Command.Descriptor {
-
-			override val commandClass: KClass<TCommand>
-			override val name: String
-			override val resultClass: KClass<TResult>
-		}
-	}
 }
 
 
-inline fun <reified TCommand : Typed<TCommand, TResult>, reified TResult : Any> commandDescriptor(name: String) =
-	object : Typed.Descriptor<TCommand, TResult> {
+interface CommandDefinition : CommandMeta {
 
-		override val commandClass = TCommand::class
-		override val name = name
-		override val resultClass = TResult::class
-	}
+	val name: String
+	val resultSerializer: KSerializer<*>
+	val serializer: KSerializer<out Command>
+
+	override val definition
+		get() = this
+}
+
+
+interface CommandMeta {
+
+	val definition: CommandDefinition
+}
+
+
+abstract class TypedCommand<TCommand : TypedCommand<TCommand, TResult>, TResult : Any> : Command, TypedCommandMeta<TCommand, TResult>
+
+
+class TypedCommandDefinition<TCommand : TypedCommand<TCommand, TResult>, TResult : Any>(
+	override val name: String,
+	override val resultSerializer: KSerializer<TResult>,
+	override val serializer: KSerializer<TCommand>
+) : CommandDefinition, TypedCommandMeta<TCommand, TResult> {
+
+	override val definition
+		get() = this
+
+	override fun toString() =
+		name
+}
+
+
+interface TypedCommandMeta<TCommand : TypedCommand<TCommand, TResult>, TResult : Any> : CommandMeta {
+
+	override val definition: TypedCommandDefinition<TCommand, TResult>
+}

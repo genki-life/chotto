@@ -15,6 +15,7 @@ object AccessTokenTest {
 	@Test
 	fun testJson() = assertJsonSerialization(
 		value = AccessToken("value"),
-		json = """ "value" """
+		json = """ "value" """,
+		serializer = AccessToken.serializer()
 	)
 }

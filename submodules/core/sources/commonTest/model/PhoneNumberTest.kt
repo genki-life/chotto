@@ -9,6 +9,7 @@ object PhoneNumberTest {
 	@Test
 	fun testJson() = assertJsonSerialization(
 		value = PhoneNumber("value"),
-		json = """ "value" """
+		json = """ "value" """,
+		serializer = PhoneNumber.serializer()
 	)
 }

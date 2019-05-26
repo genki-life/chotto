@@ -199,6 +199,7 @@ class ChottoServer internal constructor() {
 							val meta = endpoint.responseMetaFactory(transaction, request.command)
 
 							call.respond(CommandResponsePipelineData(
+								command = request.command,
 								meta = meta,
 								model = endpoint.model,
 								result = result

@@ -58,18 +58,11 @@ abstract class ChottoModule<Context : ChottoServerContext, Transaction : ChottoT
 
 
 		// move once fixed https://youtrack.jetbrains.com/issue/KT-10468
-		infix fun <TCommand : Command.Typed<TCommand, TResult>, TResult : Any> TCommand.handleBy(
-			handler: suspend (command: TCommand) -> TResult
-		) =
-			descriptor handleBy handler
-
-
-		// move once fixed https://youtrack.jetbrains.com/issue/KT-10468
-		infix fun <TCommand : Command.Typed<TCommand, TResult>, TResult : Any> Command.Typed.Descriptor<out TCommand, out TResult>.handleBy(
+		infix fun <TCommand : TypedCommand<TCommand, TResult>, TResult : Any> TypedCommandMeta<out TCommand, out TResult>.handleBy(
 			handler: suspend (command: TCommand) -> TResult
 		) {
 			commands.handlers += SpecificCommandHandler(
-				descriptor = this,
+				definition = definition,
 				handler = handler
 			)
 		}

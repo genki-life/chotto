@@ -15,5 +15,10 @@ data /*inline*/ class TestId(override val value: String) : EntityId.Typed<TestId
 		serialize()
 
 
-	companion object : EntityType.Typed<TestId, TestEntity> by "tests" using ::TestId
+	companion object : EntityType.Typed<TestId, TestEntity>(
+		namespace = "tests",
+		entitySerializer = TestEntity.serializer(),
+		idClass = TestId::class,
+		idFactory = ::TestId
+	)
 }

@@ -8,16 +8,16 @@ internal class CommandHandler(
 	handlers: Collection<SpecificCommandHandler<*, *>>
 ) {
 
-	private val handlerByDescriptor =
-		handlers.associateTo(IdentityHashMap()) { it.descriptor to it.handler }
+	private val handlerByDefinition =
+		handlers.associateTo(IdentityHashMap()) { it.definition to it.handler }
 
 
 	@Suppress("UNCHECKED_CAST")
 	suspend fun handle(command: Command): Any {
-		val descriptor = command.descriptor
-		val handle = handlerByDescriptor[descriptor]
+		val definition = command.definition
+		val handle = handlerByDefinition[definition]
 			?.let { it as suspend (command: Command) -> Any }
-			?: error("no handler registered for command '${descriptor.name}' (${descriptor.commandClass.qualifiedName})")
+			?: error("no handler registered for command '$definition'")
 
 		return handle(command)
 	}
