@@ -1,5 +1,6 @@
 package team.genki.chotto.server
 
+import com.github.fluidsonic.fluid.stdlib.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -116,7 +117,7 @@ internal object CommandFailureFeature : ApplicationFeature<ApplicationCallPipeli
 		}
 
 		respond(TextContent(
-			text = json.stringify(CommandRequestStatus.Failure.serializer(), CommandRequestStatus.Failure(cause = failure)),
+			text = json.stringify(CommandRequestStatus.Failure.serializer(), CommandRequestStatus.Failure<Any, CommandResponseMeta>(cause = failure)),
 			contentType = ContentType.Application.Json.withCharset(Charsets.UTF_8)
 		))
 	}

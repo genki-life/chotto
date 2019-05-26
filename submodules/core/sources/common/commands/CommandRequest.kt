@@ -13,7 +13,7 @@ data class CommandRequest<out TCommand : TypedCommand<*, *>, out TMeta : Command
 	companion object {
 
 		fun serializer(): KSerializer<CommandRequest<*, *>> =
-			CommandRequestSerializer()
+			CommandRequestSerializer
 	}
 }
 
@@ -22,36 +22,35 @@ interface CommandRequestMeta
 
 
 @Serializable(with = CommandRequestStatusSerializer::class)
-sealed class CommandRequestStatus {
+sealed class CommandRequestStatus<out TResult : Any, out TMeta : CommandResponseMeta> {
 
-	@Serializable(with = CommandRequestStatusSerializer::class)
-	data class Failure(val cause: CommandFailure) : CommandRequestStatus() {
+	data class Failure<out TResult : Any, out TMeta : CommandResponseMeta>(val cause: CommandFailure) : CommandRequestStatus<TResult, TMeta>() {
+
+		companion object {
+
+			fun serializer(): KSerializer<Failure<*, *>> =
+				CommandRequestStatusFailureSerializer
+		}
+	}
+
+
+	data class Success<out TResult : Any, out TMeta : CommandResponseMeta>(val response: CommandResponse<TResult, TMeta>) : CommandRequestStatus<TResult, TMeta>() {
 
 		companion object
 	}
 
 
-	data class Success<TResult : Any, TMeta : CommandResponseMeta>(val response: CommandResponse<TResult, TMeta>) : CommandRequestStatus() {
-
-		companion object
-	}
-
-
-	companion object {
-
-		fun <TResult : Any, TMeta : CommandResponseMeta> serializer(resultSerializer: KSerializer<TResult>, metaSerializer: KSerializer<TMeta>): KSerializer<CommandRequestStatus> =
-			CommandRequestStatusSerializer(resultSerializer, metaSerializer)
-	}
+	companion object
 }
 
 
 @Serializer(forClass = CommandRequest::class)
-internal class CommandRequestSerializer<TCommand : TypedCommand<*, *>, TMeta : CommandRequestMeta> : KSerializer<CommandRequest<TCommand, TMeta>> {
+internal object CommandRequestSerializer : KSerializer<CommandRequest<*, *>> {
 
 	override val descriptor = StringDescriptor.withName("team.genki.chotto.core.EntityId")
 
 
-	override fun serialize(encoder: Encoder, obj: CommandRequest<TCommand, TMeta>) {
+	override fun serialize(encoder: Encoder, obj: CommandRequest<*, *>) {
 		val serializer = encoder.context.getContextual(CommandRequest::class)
 			?: error("A serializer for team.genki.chotto.core.EntityId must be specified in the SerialModule")
 
@@ -59,23 +58,23 @@ internal class CommandRequestSerializer<TCommand : TypedCommand<*, *>, TMeta : C
 	}
 
 
-	override fun deserialize(decoder: Decoder): CommandRequest<TCommand, TMeta> {
+	override fun deserialize(decoder: Decoder): CommandRequest<*, *> {
 		val serializer = decoder.context.getContextual(CommandRequest::class)
 			?: error("A serializer for team.genki.chotto.core.EntityId must be specified in the SerialModule")
 
 		@Suppress("UNCHECKED_CAST")
-		return decoder.decodeSerializableValue(serializer as KSerializer<CommandRequest<TCommand, TMeta>>)
+		return decoder.decodeSerializableValue(serializer)
 	}
 }
 
 
 @Serializer(forClass = CommandRequestStatus::class)
-private class CommandRequestStatusSerializer<TResult : Any, TMeta : CommandResponseMeta>(
-	val resultSerializer: KSerializer<TResult>? = null,
-	val metaSerializer: KSerializer<TMeta>? = null
-) : KSerializer<CommandRequestStatus> {
+internal class CommandRequestStatusSerializer<TResult : Any, TMeta : CommandResponseMeta>(
+	val resultSerializer: KSerializer<TResult>,
+	val metaSerializer: KSerializer<TMeta>
+) : KSerializer<CommandRequestStatus<TResult, TMeta>> {
 
-	override val descriptor = object : SerialClassDescImpl("team.genki.chotto.core.CommandRequest.Status") {
+	override val descriptor = object : SerialClassDescImpl("team.genki.chotto.core.CommandRequestStatus") {
 		init {
 			addElement("status")
 			addElement("cause", isOptional = true)
@@ -84,7 +83,7 @@ private class CommandRequestStatusSerializer<TResult : Any, TMeta : CommandRespo
 	}
 
 
-	override fun deserialize(decoder: Decoder): CommandRequestStatus {
+	override fun deserialize(decoder: Decoder): CommandRequestStatus<TResult, TMeta> {
 		decoder.beginStructure(descriptor).apply {
 			lateinit var status: String
 			var cause: CommandFailure? = null
@@ -95,12 +94,7 @@ private class CommandRequestStatusSerializer<TResult : Any, TMeta : CommandRespo
 					CompositeDecoder.READ_DONE -> break@loop
 					0 -> status = decodeStringElement(descriptor, index)
 					1 -> cause = decodeSerializableElement(descriptor, index, CommandFailure.serializer())
-					2 -> {
-						resultSerializer ?: error("cannot use CommandRequestStatusSerializer.Failure.serializer() for decoding Success")
-						metaSerializer ?: error("cannot use CommandRequestStatusSerializer.Failure.serializer() for decoding Success")
-
-						response = decodeSerializableElement(descriptor, index, CommandResponse.serializer(resultSerializer, metaSerializer))
-					}
+					2 -> response = decodeSerializableElement(descriptor, index, CommandResponse.serializer(resultSerializer, metaSerializer))
 					else -> throw SerializationException("Unknown index $index")
 				}
 			}
@@ -121,7 +115,7 @@ private class CommandRequestStatusSerializer<TResult : Any, TMeta : CommandRespo
 
 
 	@Suppress("UNCHECKED_CAST")
-	override fun serialize(encoder: Encoder, obj: CommandRequestStatus) {
+	override fun serialize(encoder: Encoder, obj: CommandRequestStatus<TResult, TMeta>) {
 		encoder.beginStructure(descriptor).apply {
 			when (obj) {
 				is CommandRequestStatus.Failure -> {
@@ -131,13 +125,57 @@ private class CommandRequestStatusSerializer<TResult : Any, TMeta : CommandRespo
 
 				// FIXME entities missing here
 				is CommandRequestStatus.Success<*, *> -> {
-					resultSerializer ?: error("cannot use CommandRequestStatusSerializer.Failure.serializer() for encoding Success")
-					metaSerializer ?: error("cannot use CommandRequestStatusSerializer.Failure.serializer() for encoding Success")
-
 					encodeStringElement(descriptor, 0, "success")
 					encodeSerializableElement(descriptor, 2, CommandResponse.serializer(resultSerializer, metaSerializer) as KSerializer<Any>, obj.response)
 				}
 			}
+
+			endStructure(descriptor)
+		}
+	}
+}
+
+
+@Serializer(forClass = CommandRequestStatus.Failure::class)
+internal object CommandRequestStatusFailureSerializer : KSerializer<CommandRequestStatus.Failure<*, *>> {
+
+	override val descriptor = object : SerialClassDescImpl("team.genki.chotto.core.CommandRequestStatus.Failure") {
+		init {
+			addElement("status")
+			addElement("cause")
+		}
+	}
+
+
+	override fun deserialize(decoder: Decoder): CommandRequestStatus.Failure<*, *> {
+		decoder.beginStructure(descriptor).apply {
+			lateinit var status: String
+			lateinit var cause: CommandFailure
+
+			loop@ while (true) {
+				when (val index = decodeElementIndex(descriptor)) {
+					CompositeDecoder.READ_DONE -> break@loop
+					0 -> status = decodeStringElement(descriptor, index)
+					1 -> cause = decodeSerializableElement(descriptor, index, CommandFailure.serializer())
+					else -> throw SerializationException("Unknown index $index")
+				}
+			}
+
+			endStructure(descriptor)
+
+			return when (status) {
+				"failure" -> CommandRequestStatus.Failure<Any, CommandResponseMeta>(cause = cause)
+				else -> throw SerializationException("Unexpected status '$status', expected 'failure'")
+			}
+		}
+	}
+
+
+	@Suppress("UNCHECKED_CAST")
+	override fun serialize(encoder: Encoder, obj: CommandRequestStatus.Failure<*, *>) {
+		encoder.beginStructure(descriptor).apply {
+			encodeStringElement(descriptor, 0, "failure")
+			encodeSerializableElement(descriptor, 1, CommandFailure.serializer(), obj.cause)
 
 			endStructure(descriptor)
 		}

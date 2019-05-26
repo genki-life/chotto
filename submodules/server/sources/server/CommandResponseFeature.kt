@@ -1,5 +1,6 @@
 package team.genki.chotto.server
 
+import com.github.fluidsonic.fluid.stdlib.*
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -67,7 +68,8 @@ internal object CommandResponseFeature : ApplicationFeature<ApplicationCallPipel
 				mode = WriteMode.OBJ,
 				modeReuseCache = arrayOfNulls(WriteMode.values().size)
 			).let { encoder ->
-				val descriptor = CommandRequestStatus.serializer().descriptor
+				// we won't serialize TResult or TMeta, we just need the descriptor
+				val descriptor = CommandRequestStatus.serializer(Unit.serializer(), Unit.serializer()).descriptor
 				(encoder.beginStructure(descriptor, resultSerializer, metaSerializer) as ElementValueEncoder).let { encoder ->
 					encoder.encodeStringElement(descriptor, 0, "success")
 					encoder.encodeElement(descriptor, 2)
