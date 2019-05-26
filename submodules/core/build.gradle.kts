@@ -16,8 +16,8 @@ kotlin {
 
 			dependencies {
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.11"))
-				api(fluid("time", "0.9.1"))
+				api(fluid("stdlib", "0.9.12"))
+				api(fluid("time", "0.9.2"))
 
 				implementation(kotlinx("serialization-runtime", "0.11.0"))
 			}
