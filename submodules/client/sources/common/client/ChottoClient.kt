@@ -55,6 +55,20 @@ class ChottoClient<TModel : ClientModel<*, *>>(
 
 
 @Suppress("UNCHECKED_CAST")
+suspend fun ChottoClient<*>.unsafeExecute(
+	accessToken: AccessToken?,
+	command: TypedCommand<*, *>
+): CommandResponse<*, *> =
+	internalExecute(
+		accessToken = accessToken,
+		request = CommandRequest(
+			command = command,
+			meta = model.createRequestMetaForCommand(command)
+		)
+	)
+
+
+@Suppress("UNCHECKED_CAST")
 suspend fun <
 	TModel : ClientModel<*, TCommandResponseMeta>,
 	TCommandResponseMeta : CommandResponseMeta,
