@@ -4,6 +4,7 @@ plugins {
 }
 
 kotlin {
+	iosArm64()
 	iosX64()
 	jvm()
 
@@ -19,7 +20,12 @@ kotlin {
 			}
 		}
 
-		getByName("iosX64Main") {
+		jvmMain {
+			kotlin.setSrcDirs(listOf("sources/jvm"))
+			resources.setSrcDirs(emptyList<Any>())
+		}
+
+		val iosMain by creating {
 			kotlin.setSrcDirs(listOf("sources/ios"))
 			resources.setSrcDirs(emptyList<Any>())
 
@@ -28,9 +34,12 @@ kotlin {
 			}
 		}
 
-		jvmMain {
-			kotlin.setSrcDirs(listOf("sources/jvm"))
-			resources.setSrcDirs(emptyList<Any>())
+		getByName("iosArm64Main") {
+			dependsOn(iosMain)
+		}
+
+		getByName("iosX64Main") {
+			dependsOn(iosMain)
 		}
 	}
 }

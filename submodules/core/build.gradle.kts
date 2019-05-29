@@ -6,6 +6,7 @@ plugins {
 }
 
 kotlin {
+	iosArm64()
 	iosX64()
 	jvm()
 
@@ -18,8 +19,7 @@ kotlin {
 				implementation(kotlinx("serialization-runtime", "0.11.0"))
 
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.15"))
-				api(fluid("time", "0.9.4"))
+				api(fluid("stdlib", "0.9.16"))
 			}
 		}
 
@@ -32,20 +32,6 @@ kotlin {
 				implementation(kotlin("test-common"))
 				implementation(kotlin("test-annotations-common"))
 			}
-		}
-
-		getByName("iosX64Main") {
-			kotlin.setSrcDirs(listOf("sources/ios"))
-			resources.setSrcDirs(emptyList<Any>())
-
-			dependencies {
-				implementation(kotlinx("serialization-runtime-native", "0.11.0"))
-			}
-		}
-
-		getByName("iosX64Test") {
-			kotlin.setSrcDirs(listOf("sources/iosTest"))
-			resources.setSrcDirs(emptyList<Any>())
 		}
 
 		jvmMain {
@@ -68,6 +54,32 @@ kotlin {
 				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")
 				runtimeOnly("org.junit.platform:junit-platform-runner:1.4.0")
 			}
+		}
+
+		val iosMain by creating {
+			kotlin.setSrcDirs(listOf("sources/ios"))
+			resources.setSrcDirs(emptyList<Any>())
+
+			dependencies {
+				implementation(kotlinx("serialization-runtime-native", "0.11.0"))
+			}
+		}
+
+		val iosTest by creating {
+			kotlin.setSrcDirs(listOf("sources/iosTest"))
+			resources.setSrcDirs(emptyList<Any>())
+		}
+
+		getByName("iosArm64Main") {
+			dependsOn(iosMain)
+		}
+
+		getByName("iosX64Main") {
+			dependsOn(iosMain)
+		}
+
+		getByName("iosX64Test") {
+			dependsOn(iosTest)
 		}
 	}
 }
