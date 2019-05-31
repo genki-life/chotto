@@ -65,6 +65,8 @@ kotlin {
 
 			dependencies {
 				implementation(kotlinx("serialization-runtime-native", "0.11.0"))
+
+				api(ktor("client-ios"))
 			}
 		}
 
