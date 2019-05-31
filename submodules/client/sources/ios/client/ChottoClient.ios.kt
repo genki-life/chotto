@@ -25,6 +25,12 @@ fun ChottoClient<*>.execute(
 		catch (e: CommandFailure) {
 			callback(null, e)
 		}
+		catch (e: Throwable) {
+			callback(null, CommandFailure( // FIXME
+				code = "internal",
+				userMessage = e.message ?: "An unknown error occurred."
+			))
+		}
 	}
 }
 

@@ -41,6 +41,7 @@ class ChottoClient<TModel : ClientModel<*, *>>(
 			header(HttpHeaders.Pragma, "no-cache")
 		}
 
+		@Suppress("MoveVariableDeclarationIntoWhen")
 		val status = model.json.parse(
 			deserializer = CommandRequestStatus.serializer(request.command.definition.resultSerializer, model.commandResponseMetaSerializer),
 			string = rawResponse

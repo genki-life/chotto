@@ -60,7 +60,7 @@ kotlin {
 		}
 
 		val iosMain by creating {
-			kotlin.setSrcDirs(listOf("sources/ios"))
+			kotlin.setSrcDirs(emptyList<Any>())
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
@@ -69,11 +69,14 @@ kotlin {
 		}
 
 		val iosTest by creating {
-			kotlin.setSrcDirs(listOf("sources/iosTest"))
+			kotlin.setSrcDirs(emptyList<Any>())
 			resources.setSrcDirs(emptyList<Any>())
 		}
 
 		getByName("iosArm64Main") {
+			kotlin.setSrcDirs(listOf("sources/iosArm64"))
+			resources.setSrcDirs(emptyList<Any>())
+
 			dependsOn(iosMain)
 
 			dependencies {
@@ -82,6 +85,9 @@ kotlin {
 		}
 
 		getByName("iosArm64Test") {
+			kotlin.setSrcDirs(listOf("sources/iosArm64Test"))
+			resources.setSrcDirs(emptyList<Any>())
+
 			dependsOn(iosTest)
 
 			dependencies {
@@ -90,6 +96,9 @@ kotlin {
 		}
 
 		getByName("iosX64Main") {
+			kotlin.setSrcDirs(listOf("sources/iosX64"))
+			resources.setSrcDirs(emptyList<Any>())
+
 			dependsOn(iosMain)
 
 			dependencies {
@@ -98,6 +107,9 @@ kotlin {
 		}
 
 		getByName("iosX64Test") {
+			kotlin.setSrcDirs(listOf("sources/iosX64Test"))
+			resources.setSrcDirs(emptyList<Any>())
+
 			dependsOn(iosTest)
 
 			dependencies {
