@@ -15,8 +15,8 @@ fun ChottoClient<*>.execute(
 	accessToken: AccessToken?,
 	command: TypedCommand<*, *>,
 	callback: (response: CommandResponse<*, *>?, failure: CommandFailure?) -> Unit
-) {
-	GlobalScope.launch(ApplicationDispatcher) {
+): () -> Unit {
+	val job = GlobalScope.launch(ApplicationDispatcher) {
 		try {
 			val response = unsafeExecute(
 				accessToken = accessToken,
@@ -24,6 +24,9 @@ fun ChottoClient<*>.execute(
 			)
 
 			callback(response, null)
+		}
+		catch (e: CancellationException) {
+			// as you wish
 		}
 		catch (e: CommandFailure) {
 			callback(null, e)
@@ -41,6 +44,8 @@ fun ChottoClient<*>.execute(
 			))
 		}
 	}
+
+	return { job.cancel() }
 }
 
 
