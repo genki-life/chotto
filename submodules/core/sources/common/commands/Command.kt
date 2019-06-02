@@ -1,6 +1,7 @@
 package team.genki.chotto.core
 
 import kotlinx.serialization.*
+import kotlinx.serialization.modules.*
 
 
 interface Command : CommandMeta {
@@ -14,6 +15,7 @@ interface CommandDefinition : CommandMeta {
 	val name: String
 	val resultSerializer: KSerializer<*>
 	val serializer: KSerializer<out Command>
+	val serialModule: SerialModule
 
 	override val definition
 		get() = this
@@ -32,11 +34,13 @@ interface TypedCommand<TCommand : TypedCommand<TCommand, TResult>, TResult : Any
 class TypedCommandDefinition<TCommand : TypedCommand<TCommand, TResult>, TResult : Any>(
 	override val name: String,
 	override val resultSerializer: KSerializer<TResult>,
-	override val serializer: KSerializer<TCommand>
+	override val serializer: KSerializer<TCommand>,
+	override val serialModule: SerialModule = EmptyModule
 ) : CommandDefinition, TypedCommandMeta<TCommand, TResult> {
 
 	override val definition
 		get() = this
+
 
 	override fun toString() =
 		name

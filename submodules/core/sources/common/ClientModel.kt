@@ -10,16 +10,23 @@ abstract class ClientModel<TCommandRequestMeta : CommandRequestMeta, TCommandRes
 	commandDefinitions: Set<TypedCommandMeta<*, *>>,
 	val commandRequestMetaSerializer: KSerializer<TCommandRequestMeta>,
 	val commandResponseMetaSerializer: KSerializer<TCommandResponseMeta>,
-	entityTypes: Set<EntityType<*, *>>
+	entityTypes: Set<EntityType<*, *>>,
+	serialModule: SerialModule = EmptyModule
 ) {
 
 	val commandDefinitions: Set<TypedCommandDefinition<*, *>> = commandDefinitions.mapTo(hashSetOf()) { it.definition }
 	val entityTypes = entityTypes.toSet()
 
-	val serializationContext = serializersModuleOf(mapOf(
-		CommandRequest::class to ConcreteCommandRequestSerializer(commandDefinitions = this.commandDefinitions, metaSerializer = commandRequestMetaSerializer),
-		EntityId::class to ConcreteEntityIdSerializer(types = entityTypes)
-	))
+	val serializationContext = SerializersModule {
+		contextual(ConcreteCommandRequestSerializer(commandDefinitions = this@ClientModel.commandDefinitions, metaSerializer = commandRequestMetaSerializer))
+		contextual(ConcreteEntityIdSerializer(types = entityTypes))
+
+		include(serialModule)
+
+		for (commandDefinition in this@ClientModel.commandDefinitions) {
+			include(commandDefinition.serialModule)
+		}
+	}
 
 	val json = Json(
 		configuration = JsonConfiguration.Stable,
