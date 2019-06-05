@@ -28,13 +28,13 @@ abstract class ClientModel<TCommandRequestMeta : CommandRequestMeta, TCommandRes
 		}
 	}
 
-	val json = Json(
-		configuration = JsonConfiguration.Stable,
+	val prettyJson = Json(
+		configuration = JsonConfiguration.Stable.copy(indent = "\t", prettyPrint = true, strictMode = false),
 		context = serializationContext
 	)
 
-	val prettyJson = Json(
-		configuration = JsonConfiguration.Stable.copy(prettyPrint = true, indent = "\t"),
+	val json = Json(
+		configuration = JsonConfiguration.Stable.copy(strictMode = false),
 		context = serializationContext
 	)
 
