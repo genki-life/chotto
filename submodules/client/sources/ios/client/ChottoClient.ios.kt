@@ -4,6 +4,7 @@ import io.ktor.client.engine.ios.*
 import io.ktor.util.*
 import kotlinx.coroutines.*
 import platform.darwin.*
+import platform.posix.*
 import team.genki.chotto.core.*
 import kotlin.coroutines.*
 
@@ -16,7 +17,7 @@ fun ChottoClient<*>.execute(
 	command: TypedCommand<*, *>,
 	callback: (response: CommandResponse<*, *>?, failure: CommandFailure?) -> Unit
 ): () -> Unit {
-	val job = GlobalScope.launch(ApplicationDispatcher) {
+	val job = GlobalScope.launch(backgroundDispatcher) {
 		try {
 			val response = unsafeExecute(
 				accessToken = accessToken,
@@ -49,7 +50,7 @@ fun ChottoClient<*>.execute(
 }
 
 
-private val ApplicationDispatcher: CoroutineDispatcher = NsQueueDispatcher(dispatch_get_main_queue())
+private val backgroundDispatcher: CoroutineDispatcher = NsQueueDispatcher(dispatch_get_global_queue(QOS_CLASS_UTILITY.toLong(), 0))
 
 private class NsQueueDispatcher(private val dispatchQueue: dispatch_queue_t) : CoroutineDispatcher() {
 
