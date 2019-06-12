@@ -27,11 +27,6 @@ interface EntityType<TId : EntityId, TEntity : Entity> {
 		internal val prefix = "$namespace/"
 
 
-		init {
-			freeze()
-		}
-
-
 		final override fun equals(other: Any?) =
 			this === other
 
