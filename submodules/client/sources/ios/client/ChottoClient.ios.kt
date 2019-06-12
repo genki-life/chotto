@@ -1,5 +1,6 @@
 package team.genki.chotto.client
 
+import io.ktor.client.engine.*
 import io.ktor.client.engine.ios.*
 import io.ktor.http.*
 import kotlinx.coroutines.*
@@ -16,6 +17,7 @@ private lateinit var localExecutor: CommandExecutor
 @Suppress("NAME_SHADOWING")
 actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 	baseUrl: Url,
+	httpEngine: HttpClientEngineFactory<*>,
 	private val model: TModel
 ) {
 
@@ -28,7 +30,7 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 			{
 				CommandExecutor.Configuration(
 					baseUrl = baseUrl,
-					httpEngine = Ios,
+					httpEngine = httpEngine,
 					model = model
 				)
 			},
@@ -93,7 +95,10 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 	}
 
 
-	actual companion object
+	actual companion object {
+
+		internal actual val defaultHttpEngine: HttpClientEngineFactory<*> get() = Ios
+	}
 }
 
 
