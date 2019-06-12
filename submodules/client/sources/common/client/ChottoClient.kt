@@ -13,6 +13,6 @@ expect class ChottoClient<TModel : ClientModel<*, *>>(
 
 	companion object {
 
-		internal val defaultHttpEngine: HttpClientEngineFactory<*>
+		val defaultHttpEngine: HttpClientEngineFactory<*>
 	}
 }

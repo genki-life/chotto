@@ -50,7 +50,7 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 
 	actual companion object {
 
-		internal actual val defaultHttpEngine: HttpClientEngineFactory<*> get() = Apache
+		actual val defaultHttpEngine: HttpClientEngineFactory<*> get() = Apache
 	}
 }
 
