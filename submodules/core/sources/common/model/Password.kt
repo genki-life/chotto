@@ -6,6 +6,11 @@ import kotlinx.serialization.*
 @Serializable(with = PasswordSerializer::class)
 data /*inline*/ class Password(val value: String) {
 
+	init {
+		freeze()
+	}
+
+
 	override fun toString() = "<redacted>"
 
 

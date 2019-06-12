@@ -31,12 +31,12 @@ abstract class ClientModel<TCommandRequestMeta : CommandRequestMeta, TCommandRes
 	val prettyJson = Json(
 		configuration = JsonConfiguration.Stable.copy(indent = "\t", prettyPrint = true, strictMode = false),
 		context = serializationContext
-	)
+	).freeze()
 
 	val json = Json(
 		configuration = JsonConfiguration.Stable.copy(strictMode = false),
 		context = serializationContext
-	)
+	).freeze()
 
 
 	init {

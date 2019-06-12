@@ -2,9 +2,9 @@ package tests
 
 import io.ktor.client.engine.*
 import io.ktor.client.engine.mock.*
-import io.ktor.content.*
 import io.ktor.http.*
-import io.ktor.util.*
+import io.ktor.http.content.*
+import kotlinx.io.core.*
 import team.genki.chotto.client.*
 import team.genki.chotto.core.*
 import kotlin.test.*
@@ -102,9 +102,8 @@ object CommandTest {
 	}
 
 
-	@UseExperimental(InternalAPI::class)
 	private suspend fun test(data: CommandTestData<*>) {
-		val client = ChottoClient(
+		val executor = CommandExecutor(CommandExecutor.Configuration(
 			baseUrl = Url("https://unit.testing.local/"),
 			httpEngine = MockEngine.config {
 				addHandler { request ->
@@ -124,7 +123,8 @@ object CommandTest {
 						throw AssertionError("Cannot parse expected request JSON:\n${data.serializedRequest}\n\n$e")
 					}
 
-					val actualRequestJson = (request.body as? TextContent)?.text ?: throw AssertionError("only TextContent supported for now")
+					val actualRequestJson = (request.body as? ByteArrayContent ?: throw AssertionError("only ByteArrayContent supported for now"))
+						.bytes().let { String(it) }
 					val actualRequestStructure = try {
 						TestClientModel.prettyJson.parseJson(actualRequestJson)
 					}
@@ -138,12 +138,15 @@ object CommandTest {
 				}
 			},
 			model = TestClientModel
-		)
+		))
 		assertEquals(
 			data.response,
-			client.execute(
+			executor.execute(
 				accessToken = data.accessToken,
-				command = data.command
+				request = CommandRequest(
+					command = data.command,
+					meta = TestClientModel.createRequestMetaForCommand(data.command)
+				)
 			),
 			"response value"
 		)

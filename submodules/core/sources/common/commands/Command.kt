@@ -38,6 +38,11 @@ class TypedCommandDefinition<TCommand : TypedCommand<TCommand, TResult>, TResult
 	override val serialModule: SerialModule = EmptyModule
 ) : CommandDefinition, TypedCommandMeta<TCommand, TResult> {
 
+	init {
+		freeze()
+	}
+
+
 	override val definition
 		get() = this
 

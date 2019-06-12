@@ -7,6 +7,11 @@ import kotlinx.serialization.internal.*
 @Serializable(with = ChangeSerializer::class)
 data /*inline*/ class Change<out Value>(val value: Value) {
 
+	init {
+		freeze()
+	}
+
+
 	companion object
 }
 

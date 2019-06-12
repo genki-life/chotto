@@ -36,10 +36,12 @@ kotlin {
 		}
 
 		jvmMain {
-			kotlin.setSrcDirs(listOf("sources/jvmMain"))
+			kotlin.setSrcDirs(listOf("sources/jvm"))
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
+				implementation(ktor("client-apache")) // TODO add different targets for JVM and Android
+
 				api(kotlin("stdlib-jdk8"))
 				api(ktor("client-core-jvm"))
 			}

@@ -26,11 +26,19 @@ interface EntityType<TId : EntityId, TEntity : Entity> {
 
 		internal val prefix = "$namespace/"
 
+
+		init {
+			freeze()
+		}
+
+
 		final override fun equals(other: Any?) =
 			this === other
 
+
 		final override fun hashCode() =
 			super.hashCode()
+
 
 		final override fun parseId(string: String) =
 			string
@@ -45,6 +53,7 @@ interface EntityType<TId : EntityId, TEntity : Entity> {
 
 		final override fun toString() =
 			namespace
+
 
 		final override fun TId.serialize(): String =
 			serializeId(this)

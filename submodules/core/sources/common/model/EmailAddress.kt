@@ -6,6 +6,11 @@ import kotlinx.serialization.*
 @Serializable(with = EmailAddressSerializer::class)
 data /*inline*/ class EmailAddress(val value: String) {
 
+	init {
+		freeze()
+	}
+
+
 	fun toLowerCase() =
 		EmailAddress(value.toLowerCase())
 

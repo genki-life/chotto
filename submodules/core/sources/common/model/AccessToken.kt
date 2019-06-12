@@ -6,6 +6,11 @@ import kotlinx.serialization.*
 @Serializable(with = AccessTokenSerializer::class)
 data /*inline*/ class AccessToken(val value: String) {
 
+	init {
+		freeze()
+	}
+
+
 	override fun toString() = "<redacted>"
 
 

@@ -1,15 +1,8 @@
 package team.genki.chotto.client
 
-import io.ktor.client.engine.ios.*
+import io.ktor.client.engine.apache.*
 import io.ktor.http.*
-import kotlinx.coroutines.*
 import team.genki.chotto.core.*
-import kotlin.coroutines.*
-import kotlin.native.concurrent.*
-
-
-@ThreadLocal
-private lateinit var localExecutor: CommandExecutor
 
 
 @Suppress("NAME_SHADOWING")
@@ -18,46 +11,39 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 	private val model: TModel
 ) {
 
-	private val worker = Worker.start()
+	private val executor = CommandExecutor(CommandExecutor.Configuration(
+		baseUrl = baseUrl,
+		httpEngine = Apache,
+		model = model
+	))
 
 
-	init {
-		worker.execute(
-			TransferMode.UNSAFE, // https://github.com/JetBrains/kotlin-native/issues/3061
-			{
-				CommandExecutor.Configuration(
-					baseUrl = baseUrl,
-					httpEngine = Ios,
-					model = model
-				)
-			},
-			{ localExecutor = CommandExecutor(it) }
-		)
-	}
-
-
-	fun execute(
+	@Suppress("UNCHECKED_CAST")
+	suspend fun <
+		TModel : ClientModel<*, TCommandResponseMeta>,
+		TCommandResponseMeta : CommandResponseMeta,
+		TResult : Any
+		>
+		execute(
 		accessToken: AccessToken?,
-		command: TypedCommand<*, *>,
-		callback: (response: CommandResponse<*, *>?, failure: CommandFailure?) -> Unit
-	): () -> Unit {
-		callback.freeze() // FIXME needed?
+		command: TypedCommand<*, TResult>
+	): CommandResponse<TResult, TCommandResponseMeta> =
+		unsafeExecute(
+			accessToken = accessToken,
+			command = command
+		) as CommandResponse<TResult, TCommandResponseMeta>
 
+
+	suspend fun unsafeExecute(
+		accessToken: AccessToken?,
+		command: TypedCommand<*, *>
+	): CommandResponse<*, *> {
 		val request = CommandRequest(
 			command = command,
 			meta = model.createRequestMetaForCommand(command)
 		)
 
-		worker.execute(
-			TransferMode.UNSAFE, // https://github.com/JetBrains/kotlin-native/issues/3061
-			{ Triple(accessToken, request, callback) }
-		) { (accessToken, request, callback) ->
-			GlobalScope.launch(WorkerDispatcher(Worker.current!!)) {
-				val response = localExecutor.execute(accessToken = accessToken, request = request).freeze()
-
-				callback(response, null) // FIXME main thread
-			}
-		}
+		return executor.execute(accessToken = accessToken, request = request)
 
 		// FIXME handle exceptions and cancellation
 //		val x = BackgroundWorkerDispatcher.worker.execute(
@@ -109,21 +95,8 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 //			return@execute 2// { job.cancel() }.freeze()
 //		}.result
 //		println("y")
-		return {}
 	}
 
 
 	actual companion object
-}
-
-
-private class WorkerDispatcher(private val worker: Worker) : CoroutineDispatcher() {
-
-	override fun dispatch(context: CoroutineContext, block: Runnable) {
-		worker.execute(TransferMode.UNSAFE, { block }, { it.run() }) // TODO find a better way than UNSAFE
-	}
-
-
-	override fun isDispatchNeeded(context: CoroutineContext) =
-		worker != Worker.current
 }

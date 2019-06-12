@@ -6,6 +6,11 @@ import kotlinx.serialization.*
 @Serializable(with = PhoneNumberSerializer::class)
 data /*inline*/ class PhoneNumber(val value: String) {
 
+	init {
+		freeze()
+	}
+
+
 	override fun toString() = value
 
 

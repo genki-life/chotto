@@ -19,7 +19,7 @@ kotlin {
 				implementation(kotlinx("serialization-runtime", "0.11.0"))
 
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.20"))
+				api(fluid("stdlib", "0.9.21"))
 			}
 		}
 
@@ -57,7 +57,7 @@ kotlin {
 		}
 
 		val iosMain by creating {
-			kotlin.setSrcDirs(listOf("sources/ios"))
+			kotlin.setSrcDirs(emptyList<Any>())
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
@@ -66,19 +66,28 @@ kotlin {
 		}
 
 		val iosTest by creating {
-			kotlin.setSrcDirs(listOf("sources/iosTest"))
+			kotlin.setSrcDirs(emptyList<Any>())
 			resources.setSrcDirs(emptyList<Any>())
 		}
 
 		getByName("iosArm64Main") {
+			kotlin.setSrcDirs(listOf("sources/iosArm64"))
+			resources.setSrcDirs(emptyList<Any>())
+
 			dependsOn(iosMain)
 		}
 
 		getByName("iosX64Main") {
+			kotlin.setSrcDirs(listOf("sources/iosX64"))
+			resources.setSrcDirs(emptyList<Any>())
+
 			dependsOn(iosMain)
 		}
 
 		getByName("iosX64Test") {
+			kotlin.setSrcDirs(listOf("sources/iosX64Test"))
+			resources.setSrcDirs(emptyList<Any>())
+
 			dependsOn(iosTest)
 		}
 	}

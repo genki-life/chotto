@@ -6,6 +6,11 @@ import kotlinx.serialization.*
 @Serializable(with = RefreshTokenSerializer::class)
 data /*inline*/ class RefreshToken(val value: String) {
 
+	init {
+		freeze()
+	}
+
+
 	override fun toString() = "<redacted>"
 
 
