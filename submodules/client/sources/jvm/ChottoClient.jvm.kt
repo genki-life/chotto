@@ -21,22 +21,6 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 	))
 
 
-	@Suppress("UNCHECKED_CAST")
-	suspend fun <
-		TModel : ClientModel<*, TCommandResponseMeta>,
-		TCommandResponseMeta : CommandResponseMeta,
-		TResult : Any
-		>
-		execute(
-		accessToken: AccessToken?,
-		command: TypedCommand<*, TResult>
-	): CommandResponse<TResult, TCommandResponseMeta> =
-		unsafeExecute(
-			accessToken = accessToken,
-			command = command
-		) as CommandResponse<TResult, TCommandResponseMeta>
-
-
 	suspend fun unsafeExecute(
 		accessToken: AccessToken?,
 		command: TypedCommand<*, *>
@@ -69,3 +53,19 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 		internal actual val defaultHttpEngine: HttpClientEngineFactory<*> get() = Apache
 	}
 }
+
+
+@Suppress("UNCHECKED_CAST")
+suspend fun <
+	TModel : ClientModel<*, TCommandResponseMeta>,
+	TCommandResponseMeta : CommandResponseMeta,
+	TResult : Any
+	>
+	ChottoClient<TModel>.execute(
+	accessToken: AccessToken?,
+	command: TypedCommand<*, TResult>
+): CommandResponse<TResult, TCommandResponseMeta> =
+	unsafeExecute(
+		accessToken = accessToken,
+		command = command
+	) as CommandResponse<TResult, TCommandResponseMeta>
