@@ -3,6 +3,7 @@ package team.genki.chotto.client
 import io.ktor.client.engine.ios.*
 import io.ktor.http.*
 import kotlinx.coroutines.*
+import platform.darwin.*
 import team.genki.chotto.core.*
 import kotlin.coroutines.*
 import kotlin.native.concurrent.*
@@ -41,75 +42,54 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 		command: TypedCommand<*, *>,
 		callback: (response: CommandResponse<*, *>?, failure: CommandFailure?) -> Unit
 	): () -> Unit {
-		callback.freeze() // FIXME needed?
-
 		val request = CommandRequest(
 			command = command,
 			meta = model.createRequestMetaForCommand(command)
-		)
+		).freeze()
 
-		worker.execute(
+		var jobFuture: Future<Job>? = worker.execute(
 			TransferMode.UNSAFE, // https://github.com/JetBrains/kotlin-native/issues/3061
 			{ Triple(accessToken, request, callback) }
 		) { (accessToken, request, callback) ->
 			GlobalScope.launch(WorkerDispatcher(Worker.current!!)) {
-				val response = localExecutor.execute(accessToken = accessToken, request = request).freeze()
+				var response: CommandResponse<*, *>? = null
+				var failure: CommandFailure? = null
 
-				callback(response, null) // FIXME main thread
+				try {
+					response = localExecutor.execute(accessToken = accessToken, request = request)
+				}
+				catch (e: CancellationException) {
+					// as you wish
+					return@launch
+				}
+				catch (e: CommandFailure) {
+					failure = e
+				}
+				catch (e: IosHttpRequestException) {
+					failure = CommandFailure( // FIXME
+						code = "internal",
+						userMessage = e.origin?.localizedDescription ?: "An unknown error occurred."
+					)
+				}
+				catch (e: Throwable) { // yup, Throwable - see https://github.com/ktorio/ktor/blob/e0525a274d2c9958778fb649df39d59c44341b2b/ktor-client/ktor-client-ios/darwin/src/io/ktor/client/engine/ios/Utils.kt#L27
+					failure = CommandFailure( // FIXME
+						code = "internal",
+						userMessage = e.message ?: "An unknown error occurred."
+					)
+				}
+
+				dispatch_async(dispatch_get_main_queue(), {
+					callback(response, failure)
+				}.freeze())
 			}
 		}
 
-		// FIXME handle exceptions and cancellation
-//		val x = BackgroundWorkerDispatcher.worker.execute(
-//			TransferMode.SAFE,
-//			{ Pair(this, Triple(accessToken, command, callback)) }
-//		) { (client, p) ->
-//			println("a")
-//			val (accessToken, command, callback) = p
-//
-//			val job = GlobalScope.launch(Dispatchers.Unconfined) {
-//				println("b")
-//				try {
-//					val response = client.unsafeExecute(
-//						accessToken = accessToken,
-//						command = command
-//					)
-//					println("c")
-//
-//					callback(response, null)
-//					println("d")
-//				}
-//				catch (e: CancellationException) {
-//					// as you wish
-//				}
-//				catch (e: CommandFailure) {
-//					println("e")
-//					callback(null, e.freeze())
-//					println("f")
-//				}
-//				catch (e: IosHttpRequestException) {
-//					println("g")
-//					callback(null, CommandFailure( // FIXME
-//						code = "internal",
-//						userMessage = e.origin?.localizedDescription ?: "An unknown error occurred."
-//					).freeze())
-//					println("h")
-//				}
-//				catch (e: Throwable) { // yup, Throwable - see https://github.com/ktorio/ktor/blob/e0525a274d2c9958778fb649df39d59c44341b2b/ktor-client/ktor-client-ios/darwin/src/io/ktor/client/engine/ios/Utils.kt#L27
-//					println("i")
-//					callback(null, CommandFailure( // FIXME
-//						code = "internal",
-//						userMessage = e.message ?: "An unknown error occurred."
-//					).freeze())
-//					println("j")
-//				}
-//			}
-//
-//			println("x")
-//			return@execute 2// { job.cancel() }.freeze()
-//		}.result
-//		println("y")
-		return {}
+		return {
+			jobFuture?.let { detachedJobFuture ->
+				jobFuture = null
+				worker.execute(TransferMode.SAFE, { detachedJobFuture }, { it.result.cancel() })
+			}
+		}
 	}
 
 

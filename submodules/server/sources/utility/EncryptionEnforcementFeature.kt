@@ -17,7 +17,7 @@ internal object EncryptionEnforcementFeature : ApplicationFeature<ApplicationCal
 		pipeline.intercept(ApplicationCallPipeline.Features) {
 			if (call.request.origin.scheme != "https")
 				throw CommandFailure(
-					code = "encryptedConnectionRequired",
+					code = "invalid request",
 					userMessage = CommandFailure.genericUserMessage,
 					developerMessage = "This API must only be used over an encrypted connection."
 				)

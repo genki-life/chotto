@@ -1,6 +1,5 @@
 package team.genki.chotto.server
 
-import com.github.fluidsonic.fluid.stdlib.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -70,7 +69,7 @@ internal object CommandFailureFeature : ApplicationFeature<ApplicationCallPipeli
 				}
 
 				throw CommandFailure(
-					code = "invalidAccessToken",
+					code = "invalid access token",
 					developerMessage = "The access token is either invalid or no longer valid.",
 					userMessage = "You are no longer signed in. Please sign out and then sign in again."
 				)
@@ -90,7 +89,7 @@ internal object CommandFailureFeature : ApplicationFeature<ApplicationCallPipeli
 				call.response.status(HttpStatusCode.NotFound)
 
 				throw CommandFailure(
-					code = "unknownEndpoint",
+					code = "unknown endpoint",
 					developerMessage = "The endpoint '${call.request.uri}' does not exist or method '${call.request.httpMethod.value}' is not available",
 					userMessage = CommandFailure.genericUserMessage
 				)

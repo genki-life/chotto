@@ -41,7 +41,7 @@ internal object CommandRequestFeature : ApplicationFeature<ApplicationCallPipeli
 		}
 		catch (e: SerializationException) {
 			throw CommandFailure(
-				code = "invalidRequest",
+				code = "invalid request",
 				developerMessage = e.message!!,
 				userMessage = CommandFailure.genericUserMessage,
 				cause = e
@@ -53,7 +53,7 @@ internal object CommandRequestFeature : ApplicationFeature<ApplicationCallPipeli
 		val request = call.request
 		if (!request.contentType().withoutParameters().match(ContentType.Application.Json))
 			throw CommandFailure(
-				code = "invalidRequest",
+				code = "invalid request",
 				developerMessage = "Expected content of type '${ContentType.Application.Json}'",
 				userMessage = CommandFailure.genericUserMessage
 			)

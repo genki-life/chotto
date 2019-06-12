@@ -25,7 +25,7 @@ class CommandFailure(
 
 internal fun CommandFailure.Companion.invalidResponse(response: String, cause: Throwable? = null) =
 	CommandFailure(
-		code = "invalidResponse",
+		code = "invalid response",
 		userMessage = genericUserMessage,
 		developerMessage = "Server returned an invalid response: $response",
 		cause = cause
