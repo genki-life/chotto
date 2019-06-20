@@ -7,12 +7,12 @@ plugins {
 dependencies {
 	api(submodule("core"))
 
-	api(fluid("mongo", "0.9.5"))
+	api(fluid("mongo", "0.9.7"))
 	api(kotlin("stdlib-jdk8"))
 	api(ktor("auth-jwt"))
 	api(ktor("server-netty"))
 
-	implementation(kotlinx("serialization-runtime", "0.11.0"))
+	implementation(kotlinx("serialization-runtime", "0.11.1"))
 	implementation("ch.qos.logback:logback-classic:1.2.1")
 }
 

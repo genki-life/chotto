@@ -14,7 +14,7 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime", "0.11.0"))
+				implementation(kotlinx("serialization-runtime-common", "0.11.1"))
 
 				api(submodule("core"))
 			}
@@ -23,23 +23,31 @@ kotlin {
 		jvmMain {
 			kotlin.setSrcDirs(listOf("sources/jvm"))
 			resources.setSrcDirs(emptyList<Any>())
+
+			dependencies {
+				implementation(kotlinx("serialization-runtime", "0.11.1"))
+			}
 		}
 
 		val iosMain by creating {
 			kotlin.setSrcDirs(listOf("sources/ios"))
 			resources.setSrcDirs(emptyList<Any>())
-
-			dependencies {
-				implementation(kotlinx("serialization-runtime-native", "0.11.0"))
-			}
 		}
 
 		getByName("iosArm64Main") {
 			dependsOn(iosMain)
+
+			dependencies {
+				implementation(kotlinx("serialization-runtime-iosarm64", "0.11.1"))
+			}
 		}
 
 		getByName("iosX64Main") {
 			dependsOn(iosMain)
+
+			dependencies {
+				implementation(kotlinx("serialization-runtime-iosx64", "0.11.1"))
+			}
 		}
 	}
 }

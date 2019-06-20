@@ -28,6 +28,7 @@ subprojects {
 		bintray("genki/maven")
 		bintray("kotlin/kotlin-eap")
 		bintray("kotlin/kotlinx")
+		bintray("kotlin/ktor")
 		jcenter()
 		mavenCentral()
 	}

@@ -16,10 +16,10 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime", "0.11.0"))
+				implementation(kotlinx("serialization-runtime-common", "0.11.1"))
 
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.21"))
+				api(fluid("stdlib", "0.9.23"))
 			}
 		}
 
@@ -39,6 +39,8 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
+				implementation(kotlinx("serialization-runtime", "0.11.1"))
+
 				api(kotlin("stdlib-jdk7"))
 			}
 		}
@@ -59,10 +61,6 @@ kotlin {
 		val iosMain by creating {
 			kotlin.setSrcDirs(emptyList<Any>())
 			resources.setSrcDirs(emptyList<Any>())
-
-			dependencies {
-				implementation(kotlinx("serialization-runtime-native", "0.11.0"))
-			}
 		}
 
 		val iosTest by creating {
@@ -75,6 +73,10 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependsOn(iosMain)
+
+			dependencies {
+				implementation(kotlinx("serialization-runtime-iosarm64", "0.11.1"))
+			}
 		}
 
 		getByName("iosX64Main") {
@@ -82,6 +84,10 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependsOn(iosMain)
+
+			dependencies {
+				implementation(kotlinx("serialization-runtime-iosx64", "0.11.1"))
+			}
 		}
 
 		getByName("iosX64Test") {
@@ -96,14 +102,19 @@ kotlin {
 
 val iosTest by tasks.creating<Task> {
 	val device = findProperty("iosDevice")?.toString() ?: "iPhone 8"
-	dependsOn("linkTestDebugExecutableIosX64")
+
+	val iosTarget = kotlin.targets.getByName("iosX64") as KotlinNativeTarget
+	val binary = iosTarget.binaries.getTest(NativeBuildType.DEBUG)
+	val binaryFile = binary.outputFile
+
+	dependsOn(binary.linkTask)
+
 	group = JavaBasePlugin.VERIFICATION_GROUP
 
 	doLast {
-		val binary = kotlin.targets.getByName<KotlinNativeTarget>("iosX64").binaries.getExecutable("test", "DEBUG").outputFile
 		exec {
-			println("$ xcrun simctl spawn \"$device\" \"${binary.absolutePath}\"")
-			commandLine("xcrun", "simctl", "spawn", device, binary.absolutePath)
+			println("$ xcrun simctl spawn \"$device\" \"${binaryFile.absolutePath}\"")
+			commandLine("xcrun", "simctl", "spawn", device, binaryFile.absolutePath)
 		}
 	}
 }

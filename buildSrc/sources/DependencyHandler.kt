@@ -13,7 +13,7 @@ fun DependencyHandler.kotlinx(module: String, version: String) =
 
 
 @Suppress("unused")
-fun DependencyHandler.ktor(name: String, version: String = "1.2.1") =
+fun DependencyHandler.ktor(name: String, version: String = "1.2.2") =
 	"io.ktor:ktor-$name:$version"
 
 

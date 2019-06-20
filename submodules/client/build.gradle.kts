@@ -15,7 +15,7 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime", "0.11.0"))
+				implementation(kotlinx("serialization-runtime-common", "0.11.1"))
 
 				api(submodule("core"))
 				api(kotlin("stdlib-common"))
@@ -40,6 +40,8 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
+				implementation(kotlinx("serialization-runtime", "0.11.1"))
+
 				api(kotlin("stdlib-jdk8"))
 				api(ktor("client-apache")) // TODO add different targets for JVM and Android
 				api(ktor("client-core-jvm"))
@@ -52,8 +54,8 @@ kotlin {
 
 			dependencies {
 				implementation(kotlin("test-junit5"))
-				implementation("org.junit.jupiter:junit-jupiter-api:5.4.0")
 				implementation(ktor("client-mock-jvm"))
+				implementation("org.junit.jupiter:junit-jupiter-api:5.4.0")
 
 				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")
 				runtimeOnly("org.junit.platform:junit-platform-runner:1.4.0")
@@ -65,8 +67,6 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime-native", "0.11.0"))
-
 				api(ktor("client-ios"))
 			}
 		}
@@ -83,6 +83,8 @@ kotlin {
 			dependsOn(iosMain)
 
 			dependencies {
+				implementation(kotlinx("serialization-runtime-iosarm64", "0.11.1"))
+
 				api(ktor("client-core-iosarm64"))
 			}
 		}
@@ -105,6 +107,8 @@ kotlin {
 			dependsOn(iosMain)
 
 			dependencies {
+				implementation(kotlinx("serialization-runtime-iosx64", "0.11.1"))
+
 				api(ktor("client-core-iosx64"))
 			}
 		}
@@ -125,14 +129,19 @@ kotlin {
 
 val iosTest by tasks.creating<Task> {
 	val device = findProperty("iosDevice")?.toString() ?: "iPhone 8"
-	dependsOn("linkTestDebugExecutableIosX64")
+
+	val iosTarget = kotlin.targets.getByName("iosX64") as KotlinNativeTarget
+	val binary = iosTarget.binaries.getTest(NativeBuildType.DEBUG)
+	val binaryFile = binary.outputFile
+
+	dependsOn(binary.linkTask)
+
 	group = JavaBasePlugin.VERIFICATION_GROUP
 
 	doLast {
-		val binary = kotlin.targets.getByName<KotlinNativeTarget>("iosX64").binaries.getExecutable("test", "DEBUG").outputFile
 		exec {
-			println("$ xcrun simctl spawn \"$device\" \"${binary.absolutePath}\"")
-			commandLine("xcrun", "simctl", "spawn", device, binary.absolutePath)
+			println("$ xcrun simctl spawn \"$device\" \"${binaryFile.absolutePath}\"")
+			commandLine("xcrun", "simctl", "spawn", device, binaryFile.absolutePath)
 		}
 	}
 }
