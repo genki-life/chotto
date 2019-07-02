@@ -4,13 +4,9 @@ import org.bson.*
 import org.bson.AbstractBsonReader.*
 
 
-class BsonDecoder internal constructor(private val delegate: BsonReader) : BsonReader by delegate {
+class BsonDecoder internal constructor(private val delegate: AbstractBsonReader) : BsonReader by delegate {
 
 	fun expectValue(methodName: String) {
-		if (delegate !is AbstractBsonReader) {
-			return
-		}
-
 		var state = delegate.state
 		if (state == State.INITIAL || state == State.SCOPE_DOCUMENT || state == State.TYPE) {
 			readBsonType()
@@ -28,12 +24,18 @@ class BsonDecoder internal constructor(private val delegate: BsonReader) : BsonR
 	}
 
 
+	override fun readString(): String =
+		if (delegate.state == State.NAME) delegate.readName()
+		else delegate.readString()
+
+
 	companion object {
 
 		internal fun wrap(reader: BsonReader) =
 			when (reader) {
 				is BsonDecoder -> reader
-				else -> BsonDecoder(reader)
+				is AbstractBsonReader -> BsonDecoder(reader)
+				else -> error("Cannot wrap BsonReader of ${reader::class}")
 			}
 	}
 }
