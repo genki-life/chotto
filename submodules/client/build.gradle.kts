@@ -55,10 +55,10 @@ kotlin {
 			dependencies {
 				implementation(kotlin("test-junit5"))
 				implementation(ktor("client-mock-jvm"))
-				implementation("org.junit.jupiter:junit-jupiter-api:5.4.0")
+				implementation("org.junit.jupiter:junit-jupiter-api:5.5.0")
 
-				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")
-				runtimeOnly("org.junit.platform:junit-platform-runner:1.4.0")
+				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.0")
+				runtimeOnly("org.junit.platform:junit-platform-runner:1.5.0")
 			}
 		}
 

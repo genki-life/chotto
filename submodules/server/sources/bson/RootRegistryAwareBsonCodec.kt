@@ -22,6 +22,44 @@ interface RootRegistryAwareBsonCodec {
 	val rootRegistry: CodecRegistry
 
 
+	fun <Key : Any, Value : Any> BsonReader.readValueMapOfType(name: String, keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value> {
+		readName(name)
+		return readValueMapOfType(keyClass = keyClass, valueClass = valueClass)
+	}
+
+
+	fun <Key : Any, Value : Any> BsonReader.readValueMapOfTypeOrNull(name: String, keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value>? {
+		readName(name)
+		return readValueMapOfTypeOrNull(keyClass = keyClass, valueClass = valueClass)
+	}
+
+
+	fun <Key : Any, Value : Any> BsonReader.readValueMapOfType(keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value> {
+		val map = mutableMapOf<Key, Value>()
+
+		readDocument {
+			while (readBsonType() != BsonType.END_OF_DOCUMENT) {
+				val key = readValueOfType(keyClass)
+				map[key] = readValueOfType(valueClass)
+			}
+		}
+
+		return map
+	}
+
+
+	fun <Key : Any, Value : Any> BsonReader.readValueMapOfTypeOrNull(keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value>? {
+		expectValue("readValueMapOfTypeOrNull")
+
+		if (currentBsonType == BsonType.NULL) {
+			skipValue()
+			return null
+		}
+
+		return readValueMapOfType(keyClass = keyClass, valueClass = valueClass)
+	}
+
+
 	fun <Value : Any> BsonReader.readValueOfType(name: String, `class`: KClass<Value>): Value {
 		readName(name)
 		return readValueOfType(`class`)
@@ -105,6 +143,15 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
+	fun BsonWriter.write(name: String, values: Map<Any, Any>?, skipIfNull: Boolean = true) {
+		if (skipIfNull && values == null) return
+
+		writeName(name)
+		if (values != null) writeValues(values)
+		else writeNull()
+	}
+
+
 	fun BsonWriter.writeValue(value: Any) {
 		@Suppress("UNCHECKED_CAST")
 		(rootRegistry[value::class.java] as Encoder<Any>).encode(this, value, encoderContext)
@@ -115,6 +162,16 @@ interface RootRegistryAwareBsonCodec {
 		writeArray {
 			for (value in values) {
 				writeValue(value)
+			}
+		}
+	}
+
+
+	fun BsonWriter.writeValues(values: Map<Any, Any>) {
+		writeDocument {
+			for ((entryKey, entryValue) in values.entries) {
+				writeValue(entryKey)
+				writeValue(entryValue)
 			}
 		}
 	}
