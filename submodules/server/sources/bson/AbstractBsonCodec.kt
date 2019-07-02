@@ -19,8 +19,8 @@ abstract class AbstractBsonCodec<Value : Any, in Context : BsonCodingContext>(
 	private val valueClass = valueClass ?: defaultValueClass(this::class)
 
 
-	abstract fun BsonReader.decode(context: Context): Value
-	abstract fun BsonWriter.encode(value: Value, context: Context)
+	abstract fun BsonDecoder.decode(context: Context): Value
+	abstract fun BsonEncoder.encode(value: Value, context: Context)
 
 
 	final override fun <Value : Any> codecForClass(valueClass: KClass<in Value>): BsonCodec<Value, Context>? {
@@ -44,11 +44,11 @@ abstract class AbstractBsonCodec<Value : Any, in Context : BsonCodingContext>(
 
 
 	final override fun decode(reader: BsonReader, decoderContext: DecoderContext) =
-		reader.decode(context = requireContext())
+		BsonDecoder.wrap(reader).decode(context = requireContext())
 
 
 	final override fun encode(writer: BsonWriter, value: Value, encoderContext: EncoderContext) =
-		writer.encode(value = value, context = requireContext())
+		BsonEncoder.wrap(writer).encode(value = value, context = requireContext())
 
 
 	final override fun getEncoderClass() =

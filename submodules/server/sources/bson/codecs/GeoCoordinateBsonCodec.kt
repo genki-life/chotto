@@ -1,12 +1,11 @@
 package team.genki.chotto.server
 
 import com.github.fluidsonic.fluid.stdlib.*
-import org.bson.*
 
 
 internal object GeoCoordinateBsonCodec : AbstractBsonCodec<GeoCoordinate, BsonCodingContext>() {
 
-	override fun BsonReader.decode(context: BsonCodingContext): GeoCoordinate {
+	override fun BsonDecoder.decode(context: BsonCodingContext): GeoCoordinate {
 		var coordinate: GeoCoordinate? = null
 		var type: String? = null
 
@@ -28,7 +27,7 @@ internal object GeoCoordinateBsonCodec : AbstractBsonCodec<GeoCoordinate, BsonCo
 	}
 
 
-	override fun BsonWriter.encode(value: GeoCoordinate, context: BsonCodingContext) {
+	override fun BsonEncoder.encode(value: GeoCoordinate, context: BsonCodingContext) {
 		writeStartDocument()
 		writeName("coordinates")
 		writeStartArray()

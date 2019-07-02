@@ -22,19 +22,19 @@ interface RootRegistryAwareBsonCodec {
 	val rootRegistry: CodecRegistry
 
 
-	fun <Key : Any, Value : Any> BsonReader.readValueMapOfType(name: String, keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value> {
+	fun <Key : Any, Value : Any> BsonDecoder.readValueMapOfType(name: String, keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value> {
 		readName(name)
 		return readValueMapOfType(keyClass = keyClass, valueClass = valueClass)
 	}
 
 
-	fun <Key : Any, Value : Any> BsonReader.readValueMapOfTypeOrNull(name: String, keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value>? {
+	fun <Key : Any, Value : Any> BsonDecoder.readValueMapOfTypeOrNull(name: String, keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value>? {
 		readName(name)
 		return readValueMapOfTypeOrNull(keyClass = keyClass, valueClass = valueClass)
 	}
 
 
-	fun <Key : Any, Value : Any> BsonReader.readValueMapOfType(keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value> {
+	fun <Key : Any, Value : Any> BsonDecoder.readValueMapOfType(keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value> {
 		val map = mutableMapOf<Key, Value>()
 
 		readDocument {
@@ -48,7 +48,7 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun <Key : Any, Value : Any> BsonReader.readValueMapOfTypeOrNull(keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value>? {
+	fun <Key : Any, Value : Any> BsonDecoder.readValueMapOfTypeOrNull(keyClass: KClass<Key>, valueClass: KClass<Value>): Map<Key, Value>? {
 		expectValue("readValueMapOfTypeOrNull")
 
 		if (currentBsonType == BsonType.NULL) {
@@ -60,23 +60,23 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun <Value : Any> BsonReader.readValueOfType(name: String, `class`: KClass<Value>): Value {
+	fun <Value : Any> BsonDecoder.readValueOfType(name: String, `class`: KClass<Value>): Value {
 		readName(name)
 		return readValueOfType(`class`)
 	}
 
 
-	fun <Value : Any> BsonReader.readValueOfType(`class`: KClass<Value>) =
+	fun <Value : Any> BsonDecoder.readValueOfType(`class`: KClass<Value>) =
 		rootRegistry[`class`.boxed.java].decode(this, decoderContext)!!
 
 
-	fun <Value : Any> BsonReader.readValueOfTypeOrNull(name: String, `class`: KClass<Value>): Value? {
+	fun <Value : Any> BsonDecoder.readValueOfTypeOrNull(name: String, `class`: KClass<Value>): Value? {
 		readName(name)
 		return readValueOfTypeOrNull(`class`)
 	}
 
 
-	fun <Value : Any> BsonReader.readValueOfTypeOrNull(`class`: KClass<Value>): Value? {
+	fun <Value : Any> BsonDecoder.readValueOfTypeOrNull(`class`: KClass<Value>): Value? {
 		expectValue("readValueOfTypeOrNull")
 
 		if (currentBsonType == BsonType.NULL) {
@@ -88,11 +88,11 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun <Value : Any> BsonReader.readValuesOfType(`class`: KClass<Value>): List<Value> =
+	fun <Value : Any> BsonDecoder.readValuesOfType(`class`: KClass<Value>): List<Value> =
 		readValuesOfType(`class`, container = mutableListOf())
 
 
-	fun <Value, Container> BsonReader.readValuesOfType(`class`: KClass<Value>, container: Container): Container where Value : Any, Container : MutableCollection<Value> {
+	fun <Value, Container> BsonDecoder.readValuesOfType(`class`: KClass<Value>, container: Container): Container where Value : Any, Container : MutableCollection<Value> {
 		readArrayWithValues {
 			container.add(readValueOfType(`class`))
 		}
@@ -101,7 +101,7 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun <Value : Any> BsonReader.readValuesOfTypeOrNull(`class`: KClass<Value>): List<Value>? {
+	fun <Value : Any> BsonDecoder.readValuesOfTypeOrNull(`class`: KClass<Value>): List<Value>? {
 		expectValue("readValuesOfTypeOrNull")
 
 		if (currentBsonType == BsonType.NULL) {
@@ -113,7 +113,7 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun <Value, Container> BsonReader.readValuesOfTypeOrNull(`class`: KClass<Value>, container: Container): Container? where Value : Any, Container : MutableCollection<Value> {
+	fun <Value, Container> BsonDecoder.readValuesOfTypeOrNull(`class`: KClass<Value>, container: Container): Container? where Value : Any, Container : MutableCollection<Value> {
 		expectValue("readValuesOfTypeOrNull")
 
 		if (currentBsonType == BsonType.NULL) {
@@ -125,7 +125,7 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun BsonWriter.write(name: String, value: Any?, skipIfNull: Boolean = true) {
+	fun BsonEncoder.write(name: String, value: Any?, skipIfNull: Boolean = true) {
 		if (skipIfNull && value == null) return
 
 		writeName(name)
@@ -134,7 +134,7 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun BsonWriter.write(name: String, values: Iterable<Any>?, skipIfNull: Boolean = true) {
+	fun BsonEncoder.write(name: String, values: Iterable<Any>?, skipIfNull: Boolean = true) {
 		if (skipIfNull && values == null) return
 
 		writeName(name)
@@ -143,7 +143,7 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun BsonWriter.write(name: String, values: Map<Any, Any>?, skipIfNull: Boolean = true) {
+	fun BsonEncoder.write(name: String, values: Map<out Any, Any>?, skipIfNull: Boolean = true) {
 		if (skipIfNull && values == null) return
 
 		writeName(name)
@@ -152,13 +152,13 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun BsonWriter.writeValue(value: Any) {
+	fun BsonEncoder.writeValue(value: Any) {
 		@Suppress("UNCHECKED_CAST")
 		(rootRegistry[value::class.java] as Encoder<Any>).encode(this, value, encoderContext)
 	}
 
 
-	fun BsonWriter.writeValues(values: Iterable<Any>) {
+	fun BsonEncoder.writeValues(values: Iterable<Any>) {
 		writeArray {
 			for (value in values) {
 				writeValue(value)
@@ -167,7 +167,7 @@ interface RootRegistryAwareBsonCodec {
 	}
 
 
-	fun BsonWriter.writeValues(values: Map<Any, Any>) {
+	fun BsonEncoder.writeValues(values: Map<out Any, Any>) {
 		writeDocument {
 			for ((entryKey, entryValue) in values.entries) {
 				writeValue(entryKey)
