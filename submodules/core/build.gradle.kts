@@ -8,7 +8,18 @@ plugins {
 kotlin {
 	iosArm64()
 	iosX64()
-	jvm()
+
+	jvm {
+		compilations {
+			all {
+				kotlinOptions.jvmTarget = "1.6"
+			}
+		}
+
+		attributes {
+			attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 7)
+		}
+	}
 
 	sourceSets {
 		commonMain {
@@ -19,7 +30,7 @@ kotlin {
 				implementation(kotlinx("serialization-runtime-common", "0.11.1"))
 
 				api(kotlin("stdlib-common"))
-				api(fluid("stdlib", "0.9.23"))
+				api(fluid("stdlib", "0.9.24"))
 			}
 		}
 

@@ -7,7 +7,18 @@ plugins {
 kotlin {
 	iosArm64()
 	iosX64()
-	jvm()
+
+	jvm {
+		compilations {
+			all {
+				kotlinOptions.jvmTarget = "1.6"
+			}
+		}
+
+		attributes {
+			attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 7)
+		}
+	}
 
 	sourceSets {
 		commonMain {
