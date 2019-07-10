@@ -53,8 +53,6 @@ subprojects {
 	}
 
 	if (subprojectsForPublishing.contains(name)) {
-		apply<MavenPublishPlugin>() // FIXME remove once KT-30413 is fixed
-
 		val bintrayUser = findProperty("bintrayUser") as String?
 		val bintrayKey = findProperty("bintrayApiKey") as String?
 		if (bintrayUser != null && bintrayKey != null) {
