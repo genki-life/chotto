@@ -5,7 +5,7 @@ import org.gradle.api.tasks.testing.logging.*
 
 plugins {
 	`junit-test-suite`
-	publishing
+	`maven-publish`
 
 	id("com.github.ben-manes.versions") version "0.21.0"
 	id("com.jfrog.bintray") version "1.8.4" apply false

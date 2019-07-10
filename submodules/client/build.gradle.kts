@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.*
 
 plugins {
 	kotlin("multiplatform")
+	`maven-publish`
 }
 
 kotlin {

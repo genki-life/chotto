@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.*
 
 plugins {
 	kotlin("jvm")
+	`maven-publish`
 }
 
 dependencies {

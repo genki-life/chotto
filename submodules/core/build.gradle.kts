@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.*
 plugins {
 	kotlin("multiplatform")
 	id("kotlinx-serialization")
+	`maven-publish`
 }
 
 kotlin {
