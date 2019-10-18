@@ -7,7 +7,7 @@ plugins {
 	`junit-test-suite`
 	`maven-publish`
 
-	id("com.github.ben-manes.versions") version "0.21.0"
+	id("com.github.ben-manes.versions")
 	id("com.jfrog.bintray") version "1.8.4" apply false
 }
 
@@ -105,5 +105,13 @@ subprojects {
 
 tasks.withType<Wrapper> {
 	distributionType = Wrapper.DistributionType.ALL
-	gradleVersion = "5.5"
+	gradleVersion = "5.6.3"
+}
+
+dependencyUpdates {
+	outputFormatter = null
+
+	rejectVersionIf {
+		isUnstableVersion(candidate.version) && !isUnstableVersion(currentVersion)
+	}
 }

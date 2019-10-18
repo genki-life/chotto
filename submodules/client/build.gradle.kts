@@ -27,7 +27,7 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime-common", "0.11.1"))
+				implementation(kotlinx("serialization-runtime-common", "0.13.0"))
 
 				api(submodule("core"))
 				api(kotlin("stdlib-common"))
@@ -52,7 +52,7 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime", "0.11.1"))
+				implementation(kotlinx("serialization-runtime", "0.13.0"))
 
 				api(kotlin("stdlib-jdk8"))
 				api(ktor("client-apache")) // TODO add different targets for JVM and Android
@@ -67,10 +67,10 @@ kotlin {
 			dependencies {
 				implementation(kotlin("test-junit5"))
 				implementation(ktor("client-mock-jvm"))
-				implementation("org.junit.jupiter:junit-jupiter-api:5.5.0")
+				implementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
 
-				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.0")
-				runtimeOnly("org.junit.platform:junit-platform-runner:1.5.0")
+				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+				runtimeOnly("org.junit.platform:junit-platform-runner:1.5.2")
 			}
 		}
 
@@ -95,7 +95,7 @@ kotlin {
 			dependsOn(iosMain)
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime-iosarm64", "0.11.1"))
+				implementation(kotlinx("serialization-runtime-iosarm64", "0.13.0"))
 
 				api(ktor("client-core-iosarm64"))
 			}
@@ -119,7 +119,7 @@ kotlin {
 			dependsOn(iosMain)
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime-iosx64", "0.11.1"))
+				implementation(kotlinx("serialization-runtime-iosx64", "0.13.0"))
 
 				api(ktor("client-core-iosx64"))
 			}
@@ -152,8 +152,8 @@ val iosTest by tasks.creating<Task> {
 
 	doLast {
 		exec {
-			println("$ xcrun simctl spawn \"$device\" \"${binaryFile.absolutePath}\"")
-			commandLine("xcrun", "simctl", "spawn", device, binaryFile.absolutePath)
+			println("$ xcrun simctl spawn --standalone \"$device\" \"${binaryFile.absolutePath}\"")
+			commandLine("xcrun", "simctl", "spawn", "--standalone", device, binaryFile.absolutePath)
 		}
 	}
 }

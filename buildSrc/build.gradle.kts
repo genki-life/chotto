@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.*
 
 
 plugins {
-	kotlin("jvm") version "1.3.41"
+	kotlin("jvm") version "1.3.50"
 	`kotlin-dsl`
 }
 
@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
 	implementation(kotlin("gradle-plugin"))
+	api("com.github.ben-manes:gradle-versions-plugin:0.27.0")
 
 	api(kotlin("serialization"))
 }
