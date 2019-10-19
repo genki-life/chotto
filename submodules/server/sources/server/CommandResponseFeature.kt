@@ -1,6 +1,6 @@
 package team.genki.chotto.server
 
-import com.github.fluidsonic.fluid.stdlib.*
+import io.fluidsonic.stdlib.*
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.http.content.*

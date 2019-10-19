@@ -2,8 +2,8 @@ package team.genki.chotto.server
 
 import com.auth0.jwt.*
 import com.auth0.jwt.interfaces.*
-import com.github.fluidsonic.fluid.mongo.*
-import com.github.fluidsonic.fluid.stdlib.*
+import io.fluidsonic.mongo.*
+import io.fluidsonic.stdlib.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*

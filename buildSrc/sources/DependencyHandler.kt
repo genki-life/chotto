@@ -4,7 +4,7 @@ import org.gradle.kotlin.dsl.*
 
 @Suppress("unused")
 fun DependencyHandler.fluid(name: String, version: String) =
-	"com.github.fluidsonic:fluid-$name:$version"
+	"io.fluidsonic.${name.substringBefore('-')}:fluid-$name:$version"
 
 
 @Suppress("unused")

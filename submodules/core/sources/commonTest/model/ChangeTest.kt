@@ -20,6 +20,6 @@ object ChangeTest {
 	fun testJsonNull() = assertJsonSerialization(
 		value = Change(null),
 		json = """ null """,
-		serializer = Change.serializer(makeNullable(String.serializer()))
+		serializer = Change.serializer(String.serializer().nullable)
 	)
 }

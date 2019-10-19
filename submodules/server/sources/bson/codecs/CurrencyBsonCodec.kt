@@ -1,6 +1,6 @@
 package team.genki.chotto.server
 
-import com.github.fluidsonic.fluid.stdlib.*
+import io.fluidsonic.stdlib.*
 
 
 internal object CurrencyBsonCodec : AbstractBsonCodec<Currency, BsonCodingContext>() {

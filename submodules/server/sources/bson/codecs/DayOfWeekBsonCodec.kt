@@ -1,6 +1,6 @@
 package team.genki.chotto.server
 
-import com.github.fluidsonic.fluid.time.*
+import io.fluidsonic.time.*
 
 
 internal object DayOfWeekBsonCodec : AbstractBsonCodec<DayOfWeek, BsonCodingContext>() {

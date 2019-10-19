@@ -19,12 +19,11 @@ val subprojectsForPublishing = setOf(
 
 subprojects {
 	group = "team.genki"
-	version = "0.9.42"
+	version = "0.9.43"
 
 	apply<JUnitTestSuitePlugin>()
 
 	repositories {
-		bintray("fluidsonic/maven")
 		bintray("genki/maven")
 		bintray("kotlin/kotlin-eap")
 		bintray("kotlin/kotlinx")

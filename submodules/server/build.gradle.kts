@@ -8,7 +8,7 @@ plugins {
 dependencies {
 	api(submodule("core"))
 
-	api(fluid("mongo", "0.9.10"))
+	api(fluid("mongo", "0.9.11"))
 	api(kotlin("stdlib-jdk8"))
 	api(ktor("auth-jwt"))
 	api(ktor("server-netty"))
