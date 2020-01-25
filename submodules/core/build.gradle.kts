@@ -14,9 +14,9 @@ kotlin {
 		compilations {
 			all {
 				if (name.contains("test"))
-					kotlinOptions.jvmTarget = "1.6"
-				else
 					kotlinOptions.jvmTarget = "1.8"
+				else
+					kotlinOptions.jvmTarget = "1.6"
 			}
 		}
 	}

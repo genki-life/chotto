@@ -19,7 +19,7 @@ val subprojectsForPublishing = setOf(
 
 subprojects {
 	group = "team.genki"
-	version = "0.9.44"
+	version = "0.9.45"
 
 	repositories {
 		bintray("genki/maven")
