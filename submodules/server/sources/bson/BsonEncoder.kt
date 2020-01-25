@@ -1,6 +1,6 @@
 package team.genki.chotto.server
 
-import kotlinx.io.core.*
+import io.ktor.utils.io.core.*
 import org.bson.*
 
 

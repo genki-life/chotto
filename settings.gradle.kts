@@ -1,6 +1,6 @@
 pluginManagement {
 	repositories {
-		bintray("kotlin/kotlin-eap")
+		maven("https://dl.bintray.com/kotlin/kotlin-eap")
 		gradlePluginPortal()
 		jcenter()
 	}
@@ -12,8 +12,6 @@ submodule("client")
 submodule("core")
 submodule("server")
 submodule("test-model")
-
-enableFeaturePreview("GRADLE_METADATA")
 
 
 fun submodule(name: String) {

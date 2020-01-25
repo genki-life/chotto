@@ -4,7 +4,7 @@ import io.ktor.client.engine.*
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import io.ktor.http.content.*
-import kotlinx.io.core.*
+import io.ktor.utils.io.core.*
 import team.genki.chotto.client.*
 import team.genki.chotto.core.*
 import kotlin.test.*

@@ -53,7 +53,7 @@ actual class ChottoClient<TModel : ClientModel<*, *>> actual constructor(
 			TransferMode.UNSAFE, // https://github.com/JetBrains/kotlin-native/issues/3061
 			{ Triple(accessToken, request, callback) }
 		) { (accessToken, request, callback) ->
-			GlobalScope.launch(WorkerDispatcher(Worker.current!!)) {
+			GlobalScope.launch(WorkerDispatcher(Worker.current)) {
 				var response: CommandResponse<*, *>? = null
 				var failure: CommandFailure? = null
 

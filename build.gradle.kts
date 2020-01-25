@@ -21,8 +21,6 @@ subprojects {
 	group = "team.genki"
 	version = "0.9.43"
 
-	apply<JUnitTestSuitePlugin>()
-
 	repositories {
 		bintray("genki/maven")
 		bintray("kotlin/kotlin-eap")
@@ -104,7 +102,7 @@ subprojects {
 
 tasks.withType<Wrapper> {
 	distributionType = Wrapper.DistributionType.ALL
-	gradleVersion = "5.6.3"
+	gradleVersion = "6.1.1"
 }
 
 dependencyUpdates {

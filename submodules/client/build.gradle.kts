@@ -12,12 +12,11 @@ kotlin {
 	jvm {
 		compilations {
 			all {
-				kotlinOptions.jvmTarget = "1.6"
+				if (name.contains("test"))
+					kotlinOptions.jvmTarget = "1.6"
+				else
+					kotlinOptions.jvmTarget = "1.8"
 			}
-		}
-
-		attributes {
-			attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 7)
 		}
 	}
 
@@ -27,7 +26,7 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime-common", "0.13.0"))
+				implementation(kotlinx("serialization-runtime-common", "0.14.0"))
 
 				api(submodule("core"))
 				api(kotlin("stdlib-common"))
@@ -52,7 +51,7 @@ kotlin {
 			resources.setSrcDirs(emptyList<Any>())
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime", "0.13.0"))
+				implementation(kotlinx("serialization-runtime", "0.14.0"))
 
 				api(kotlin("stdlib-jdk8"))
 				api(ktor("client-apache")) // TODO add different targets for JVM and Android
@@ -67,10 +66,10 @@ kotlin {
 			dependencies {
 				implementation(kotlin("test-junit5"))
 				implementation(ktor("client-mock-jvm"))
-				implementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
+				implementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
 
-				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
-				runtimeOnly("org.junit.platform:junit-platform-runner:1.5.2")
+				runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
+				runtimeOnly("org.junit.platform:junit-platform-runner:1.6.0")
 			}
 		}
 
@@ -95,7 +94,7 @@ kotlin {
 			dependsOn(iosMain)
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime-iosarm64", "0.13.0"))
+				implementation(kotlinx("serialization-runtime-iosarm64", "0.14.0"))
 
 				api(ktor("client-core-iosarm64"))
 			}
@@ -119,7 +118,7 @@ kotlin {
 			dependsOn(iosMain)
 
 			dependencies {
-				implementation(kotlinx("serialization-runtime-iosx64", "0.13.0"))
+				implementation(kotlinx("serialization-runtime-iosx64", "0.14.0"))
 
 				api(ktor("client-core-iosx64"))
 			}
@@ -140,7 +139,7 @@ kotlin {
 
 
 val iosTest by tasks.creating<Task> {
-	val device = findProperty("iosDevice")?.toString() ?: "iPhone 8"
+	val device = findProperty("iosDevice")?.toString() ?: "iPhone 11"
 
 	val iosTarget = kotlin.targets.getByName("iosX64") as KotlinNativeTarget
 	val binary = iosTarget.binaries.getTest(NativeBuildType.DEBUG)
