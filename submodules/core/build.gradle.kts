@@ -13,10 +13,24 @@ kotlin {
 	jvm {
 		compilations {
 			all {
-				if (name.contains("test"))
+				if (name.contains("test")) {
 					kotlinOptions.jvmTarget = "1.8"
-				else
+					compileKotlinTask.sourceCompatibility = "1.8"
+					compileKotlinTask.targetCompatibility = "1.8"
+
+					attributes {
+						attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
+					}
+				}
+				else {
 					kotlinOptions.jvmTarget = "1.6"
+					compileKotlinTask.sourceCompatibility = "1.7"
+					compileKotlinTask.targetCompatibility = "1.7"
+
+					attributes {
+						attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 7)
+					}
+				}
 			}
 		}
 	}
@@ -128,6 +142,10 @@ val iosTest by tasks.creating<Task> {
 			commandLine("xcrun", "simctl", "spawn", "--standalone", device, binaryFile.absolutePath)
 		}
 	}
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+	println("xxx " + this.name + " " + this.targetCompatibility)
 }
 
 tasks.named("check") {
