@@ -144,10 +144,6 @@ val iosTest by tasks.creating<Task> {
 	}
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-	println("xxx " + this.name + " " + this.targetCompatibility)
-}
-
 tasks.named("check") {
 	dependsOn("iosTest")
 }
